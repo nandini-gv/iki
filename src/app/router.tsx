@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { ErrorBoundary } from '../components/common/ErrorBoundary';
-import { FoundationPlaceholder } from '../components/common/FoundationPlaceholder';
+import { HomePage } from '../features/home/pages/HomePage';
 import { NotFound } from '../components/common/NotFound';
 
 export const router = createBrowserRouter(
@@ -9,7 +9,7 @@ export const router = createBrowserRouter(
       path: '/',
       element: (
         <ErrorBoundary>
-          <FoundationPlaceholder />
+          <HomePage />
         </ErrorBoundary>
       ),
       errorElement: (
