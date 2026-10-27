@@ -131,8 +131,8 @@ export function HeroSection() {
         sx={{
           position: 'relative',
           zIndex: 2,
-          pt: { xs: 10, md: 11 },
-          pb: { xs: 6, md: 7 },
+          pt: { xs: 13, md: 15 },
+          pb: { xs: 5, md: 6 },
         }}
       >
         <Box sx={{ maxWidth: { xs: '100%', sm: 560, md: 620, lg: 680 } }}>

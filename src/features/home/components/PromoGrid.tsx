@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { Box, Button, Container, Grid, Typography } from '@mui/material';
-import { IKI_COLORS } from '../../../app/theme';
+import { Box, Button, Grid, Typography } from '@mui/material';
 
 interface PromoCard {
   id: string;
@@ -261,8 +260,6 @@ function PromoCard({ card, delay = 0 }: { card: PromoCard; delay?: number }) {
 }
 
 export function PromoGrid() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
   return (
     <Box
       id="promotions"
@@ -284,47 +281,6 @@ export function PromoGrid() {
           ))}
         </Grid>
       </Box>
-
-      {/* Section label below the grid */}
-      <Container maxWidth="xl">
-        <Box
-          ref={sectionRef}
-          sx={{
-            py: { xs: 3, md: 4 },
-            borderTop: '1px solid rgba(255,255,255,0.08)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: 2,
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: { xs: '0.8rem', md: '0.875rem' },
-              fontWeight: 500,
-              color: 'rgba(255,255,255,0.4)',
-              letterSpacing: '0.04em',
-            }}
-          >
-            Everything you need to grow your career
-          </Typography>
-          <Button
-            href="#opportunities"
-            variant="text"
-            sx={{
-              color: IKI_COLORS.blueLight,
-              fontWeight: 600,
-              fontSize: '0.875rem',
-              p: 0,
-              minWidth: 0,
-              '&:hover': { backgroundColor: 'transparent', opacity: 0.75 },
-            }}
-          >
-            View all opportunities →
-          </Button>
-        </Box>
-      </Container>
     </Box>
   );
 }

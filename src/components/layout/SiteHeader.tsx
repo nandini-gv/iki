@@ -83,16 +83,24 @@ export function SiteHeader() {
   const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
 
   return (
-    <Box sx={{ width: '100%', position: 'relative', zIndex: 1200 }}>
+    <Box
+      sx={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 1200,
+        width: '100%',
+        backgroundColor: 'transparent',
+      }}
+    >
       {/* Announcement Bar */}
       <AnnouncementBar />
 
-      {/* Transparent Sticky Navigation Bar */}
+      {/* Transparent Navigation Bar */}
       <AppBar
-        position="sticky"
+        component="header"
+        position="static"
         elevation={0}
         sx={{
-          top: 0,
           backgroundColor: 'transparent',
           backgroundImage: 'none',
           backdropFilter: 'none',
@@ -100,9 +108,7 @@ export function SiteHeader() {
           boxShadow: 'none',
           borderBottom: 'none',
           color: '#ffffff',
-          zIndex: 1200,
         }}
-        component="header"
       >
         <Container maxWidth="xl">
           <Toolbar

@@ -248,8 +248,8 @@ export function FAQSection() {
             </Box>
           </Reveal>
 
-          {/* Right Column: Full-Width Accordion Rows */}
-          <Reveal delay={0.08} sx={{ minWidth: 0, borderTop: '1px solid', borderColor: 'divider' }}>
+          {/* Right Column: Full-Width Accordion Rows with 10px right spacing */}
+          <Reveal delay={0.08} sx={{ minWidth: 0, borderTop: '1px solid', borderColor: 'divider', pr: '10px' }}>
             {faqDataByTopic[selectedTopic].map((item, index) => (
               <FaqRow
                 key={`${topicId}-${index}`}

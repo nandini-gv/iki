@@ -12,35 +12,6 @@ function XIcon() {
   );
 }
 
-function BCorpBadge() {
-  return (
-    <Box
-      sx={{
-        display: 'inline-flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        border: '1.5px solid rgba(255,255,255,0.6)',
-        borderRadius: '50%',
-        width: 48,
-        height: 48,
-        justifyContent: 'center',
-        color: '#ffffff',
-        p: 0.5,
-      }}
-    >
-      <Typography sx={{ fontSize: '0.55rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', lineHeight: 1 }}>
-        Certified
-      </Typography>
-      <Typography sx={{ fontSize: '1.25rem', fontWeight: 800, lineHeight: 1, fontFamily: 'serif' }}>
-        B
-      </Typography>
-      <Typography sx={{ fontSize: '0.45rem', textTransform: 'uppercase', letterSpacing: '0.04em', lineHeight: 1 }}>
-        Corporation
-      </Typography>
-    </Box>
-  );
-}
-
 export function SiteFooter() {
   return (
     <Box
@@ -98,11 +69,6 @@ export function SiteFooter() {
             >
               {footerContent.brandStatement}
             </Typography>
-
-            {/* B-Corp Certified Mark */}
-            <Box sx={{ mb: 3 }}>
-              <BCorpBadge />
-            </Box>
 
             {/* Social Icons */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -299,11 +265,11 @@ export function SiteFooter() {
               ))}
             </Box>
 
-            {/* Copyright Text with Reduced Font per User Request */}
+            {/* Copyright Text matching Terms and Conditions font size */}
             <Typography
               sx={{
-                color: 'rgba(255, 255, 255, 0.45)',
-                fontSize: '0.6875rem', // reduced font size (11px)
+                color: 'rgba(255, 255, 255, 0.65)',
+                fontSize: '0.75rem',
                 letterSpacing: '0.01em',
                 lineHeight: 1.5,
               }}

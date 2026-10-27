@@ -22,7 +22,7 @@ export function PageContainer({ children }: PageContainerProps) {
         component="main"
         sx={{
           flexGrow: 1,
-          mt: { xs: '-60px', md: '-72px' },
+          mt: { xs: '-88px', md: '-100px' },
         }}
       >
         {children}

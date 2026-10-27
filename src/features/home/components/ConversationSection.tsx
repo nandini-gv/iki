@@ -40,12 +40,11 @@ export function ConversationSection() {
       component="section"
       aria-label="Start a Conversation"
       sx={{
-        // White background per user request (changed from cream to white)
-        bgcolor: '#ffffff',
+        // Background color #dcdad8 per user request
+        bgcolor: '#dcdad8',
         color: 'text.primary',
         py: { xs: 6, md: 8, lg: 9 },
-        borderTop: '1px solid',
-        borderColor: 'divider',
+        borderTop: '1px solid rgba(0,0,0,0.08)',
       }}
     >
       <Container maxWidth="xl">
@@ -59,11 +58,11 @@ export function ConversationSection() {
         >
           {/* Left Column: Eyebrow + Serif Headline */}
           <Box>
-            <Box sx={{ mb: 3 }}>
+            <Box sx={{ mb: 2.5 }}>
               <Typography
                 component="span"
                 sx={{
-                  fontSize: '0.8rem',
+                  fontSize: '0.75rem',
                   fontWeight: 600,
                   color: '#222222',
                   letterSpacing: '0.08em',
@@ -79,12 +78,13 @@ export function ConversationSection() {
               component="h2"
               sx={{
                 fontFamily: FONT_STACK_SERIF,
-                fontSize: { xs: '2.1rem', sm: '2.6rem', md: '3.1rem', lg: '3.4rem' },
+                // Reduced font size per user request
+                fontSize: { xs: '1.6rem', sm: '1.95rem', md: '2.25rem', lg: '2.5rem' },
                 fontWeight: 500,
                 lineHeight: 1.15,
                 letterSpacing: '-0.02em',
                 color: '#1a1a1a',
-                maxWidth: 480,
+                maxWidth: 440,
               }}
             >
               We Believe In
