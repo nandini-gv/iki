@@ -62,10 +62,10 @@ export function HeroSection() {
   }, []);
 
   useEffect(() => {
-    // Auto-advance background slides
+    // Auto-advance background slides (6-second interval)
     const interval = setInterval(() => {
       setSlideIdx((i) => (i + 1) % SLIDE_IMAGES.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(interval);
   }, []);
 
