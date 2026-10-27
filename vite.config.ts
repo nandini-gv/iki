@@ -44,7 +44,17 @@ function srcAssetsImagesPlugin(): Plugin {
       const srcDir = path.resolve(__dirname, 'src/assets/images');
       const distDir = path.resolve(__dirname, 'dist/images');
       if (fs.existsSync(srcDir)) {
-        fs.cpSync(srcDir, distDir, { recursive: true });
+        if (fs.existsSync(distDir)) {
+          fs.rmSync(distDir, { recursive: true, force: true });
+        }
+        fs.cpSync(srcDir, distDir, {
+          recursive: true,
+          filter: (src) => {
+            const stat = fs.lstatSync(src);
+            if (stat.isSymbolicLink()) return false;
+            return !path.basename(src).startsWith('.');
+          },
+        });
       }
     },
   };
