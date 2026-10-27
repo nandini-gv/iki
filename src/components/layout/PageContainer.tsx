@@ -11,6 +11,11 @@ export function PageContainer({ children }: PageContainerProps) {
   return (
     <Box
       sx={{
+        '--announcement-height': '28px',
+        '--navbar-height-xs': '60px',
+        '--navbar-height-md': '72px',
+        '--header-height-xs': '88px',
+        '--header-height-md': '100px',
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',

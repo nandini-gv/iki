@@ -75,8 +75,18 @@ export function HeroSection() {
       aria-label="Hero — We Connect Talent to Opportunity"
       sx={{
         position: 'relative',
-        // Increased height by 25px per user request
-        minHeight: { xs: 545, sm: 605, md: 645, lg: 705 },
+        // Responsive viewport height calculation:
+        // Fills the viewport below and behind the transparent sticky announcement bar & navbar.
+        // On desktop, the hero occupies the full available viewport (100svh / 100vh) so that Section 2
+        // sits exactly below the fold on initial load without peeking, while content is padded below header heights.
+        minHeight: {
+          xs: 'max(100svh, 540px)',
+          md: 'max(100svh, 600px)',
+        },
+        height: {
+          xs: 'auto',
+          md: '100svh',
+        },
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
@@ -131,8 +141,8 @@ export function HeroSection() {
         sx={{
           position: 'relative',
           zIndex: 2,
-          pt: { xs: 13, md: 15 },
-          pb: { xs: 5, md: 6 },
+          pt: { xs: 'calc(88px + 16px)', md: 'calc(100px + 24px)' },
+          pb: { xs: 4, md: 5 },
         }}
       >
         <Box sx={{ maxWidth: { xs: '100%', sm: 560, md: 620, lg: 680 } }}>
