@@ -98,6 +98,14 @@ function AppleLogo() {
   );
 }
 
+const PARTNER_LOGOS = [
+  { name: 'Microsoft', component: MicrosoftLogo },
+  { name: 'Google Cloud', component: GoogleCloudLogo },
+  { name: 'AWS', component: AwsLogo },
+  { name: 'Cisco', component: CiscoLogo },
+  { name: 'Apple', component: AppleLogo },
+];
+
 export function PartnersSection() {
   return (
     <Box
@@ -156,36 +164,62 @@ export function PartnersSection() {
           </Link>
         </Reveal>
 
-        {/* Brand icons row matching mockup */}
+        {/* Brand icons continuous auto-scrolling slider */}
         <Reveal delay={0.08}>
           <Box
             sx={{
-              display: 'grid',
-              gridTemplateColumns: {
-                xs: 'repeat(2, 1fr)',
-                sm: 'repeat(3, 1fr)',
-                md: 'repeat(5, 1fr)',
-              },
-              alignItems: 'center',
-              justifyItems: 'center',
-              gap: { xs: 3.5, sm: 4, md: 5 },
+              position: 'relative',
+              width: '100%',
+              overflow: 'hidden',
               py: 2,
+              maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+              '&:hover .partner-slider-track': {
+                animationPlayState: 'paused',
+              },
             }}
           >
-            <Box sx={{ transition: 'transform 0.2s ease, opacity 0.2s ease', '&:hover': { transform: 'scale(1.04)' } }}>
-              <MicrosoftLogo />
-            </Box>
-            <Box sx={{ transition: 'transform 0.2s ease, opacity 0.2s ease', '&:hover': { transform: 'scale(1.04)' } }}>
-              <GoogleCloudLogo />
-            </Box>
-            <Box sx={{ transition: 'transform 0.2s ease, opacity 0.2s ease', '&:hover': { transform: 'scale(1.04)' } }}>
-              <AwsLogo />
-            </Box>
-            <Box sx={{ transition: 'transform 0.2s ease, opacity 0.2s ease', '&:hover': { transform: 'scale(1.04)' } }}>
-              <CiscoLogo />
-            </Box>
-            <Box sx={{ transition: 'transform 0.2s ease, opacity 0.2s ease', '&:hover': { transform: 'scale(1.04)' } }}>
-              <AppleLogo />
+            <Box
+              className="partner-slider-track"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: { xs: 6, sm: 8, md: 10 },
+                width: 'max-content',
+                animation: 'partnerSliderTrack 26s linear infinite',
+                willChange: 'transform',
+                '@keyframes partnerSliderTrack': {
+                  '0%': { transform: 'translateX(0)' },
+                  '100%': { transform: 'translateX(-50%)' },
+                },
+                '@media (prefers-reduced-motion: reduce)': {
+                  animation: 'none',
+                },
+              }}
+            >
+              {[...PARTNER_LOGOS, ...PARTNER_LOGOS, ...PARTNER_LOGOS, ...PARTNER_LOGOS].map((partner, index) => {
+                const LogoComponent = partner.component;
+                return (
+                  <Box
+                    key={`${partner.name}-${index}`}
+                    sx={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      px: { xs: 1.5, sm: 2.5 },
+                      opacity: 0.88,
+                      transition: 'transform 0.25s ease, opacity 0.25s ease',
+                      '&:hover': {
+                        transform: 'scale(1.06)',
+                        opacity: 1,
+                      },
+                    }}
+                  >
+                    <LogoComponent />
+                  </Box>
+                );
+              })}
             </Box>
           </Box>
         </Reveal>

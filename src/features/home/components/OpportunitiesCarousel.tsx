@@ -505,13 +505,13 @@ export function OpportunitiesCarousel() {
         }}
         onDragStart={(event) => event.preventDefault()}
         sx={{
-          '--active-width': { xs: '88%', sm: '78%', md: '72%', lg: '68%' },
-          '--preview-width': { xs: '48%', sm: '36%', md: '30%', lg: '28%' },
-          '--slide-gap': { xs: '12px', sm: '16px', md: '20px' },
+          '--active-width': { xs: '70%', sm: '70%', md: '70%', lg: '68%' },
+          '--preview-width': { xs: '60%', sm: '50%', md: '40%', lg: '32%' },
+          '--slide-gap': { xs: '10px', sm: '14px', md: '18px', lg: '20px' },
           '--drag-offset': `${dragOffset}px`,
           position: 'relative',
           width: '100%',
-          height: { xs: 400, sm: 440, md: 480 },
+          height: { xs: 380, sm: 430, md: 480 },
           overflow: 'hidden',
           backgroundColor: 'common.white',
           touchAction: 'pan-y',

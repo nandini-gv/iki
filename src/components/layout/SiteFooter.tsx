@@ -247,7 +247,7 @@ export function SiteFooter() {
                     href={link.href}
                     sx={{
                       color: 'rgba(255, 255, 255, 0.65)',
-                      fontSize: '0.75rem',
+                      fontSize: '0.75rem !important',
                       lineHeight: 1.5,
                       textDecoration: 'none',
                       transition: 'color 0.15s ease',
@@ -257,7 +257,7 @@ export function SiteFooter() {
                     {link.label}
                   </Link>
                   {index < footerContent.legalLinks.length - 1 && (
-                    <Box component="span" aria-hidden="true" sx={{ color: 'rgba(255, 255, 255, 0.3)' }}>
+                    <Box component="span" aria-hidden="true" sx={{ color: 'rgba(255, 255, 255, 0.3)', fontSize: '0.75rem' }}>
                       ·
                     </Box>
                   )}
@@ -265,13 +265,17 @@ export function SiteFooter() {
               ))}
             </Box>
 
-            {/* Copyright Text matching Terms and Conditions font size */}
+            {/* Copyright Text matching Terms and Conditions font size strictly without theme overrides */}
             <Typography
+              variant="caption"
+              component="p"
               sx={{
                 color: 'rgba(255, 255, 255, 0.65)',
-                fontSize: '0.75rem',
+                fontSize: '0.75rem !important',
                 letterSpacing: '0.01em',
                 lineHeight: 1.5,
+                m: 0,
+                display: 'block',
               }}
             >
               {footerContent.copyright}
