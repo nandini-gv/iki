@@ -148,15 +148,17 @@ function OpportunitySlide({ card, isActive }: { card: OpportunityCard; isActive:
       }}
     >
       <ResponsiveImage src={card.bg} alt="" sx={{ '& img': { objectFit: 'cover' } }} />
-      {/* Apple-style cinematic gradient overlay */}
-      <Box
-        sx={{
-          position: 'absolute',
-          inset: 0,
-          background:
-            'linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.85) 100%)',
-        }}
-      />
+      {/* Apple-style cinematic gradient overlay only on active slide; left/right preview cards have no tint */}
+      {isActive && (
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            background:
+              'linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.85) 100%)',
+          }}
+        />
+      )}
       <Box
         sx={{
           position: 'relative',
@@ -166,6 +168,8 @@ function OpportunitySlide({ card, isActive }: { card: OpportunityCard; isActive:
           justifyContent: 'flex-end',
           p: { xs: 2.5, sm: 3.5, md: 5 },
           boxSizing: 'border-box',
+          opacity: isActive ? 1 : 0,
+          transition: 'opacity 0.3s ease',
         }}
       >
         {/* Top Company Badge */}
@@ -537,13 +541,13 @@ export function OpportunitiesCarousel() {
                 width: isActive ? 'var(--active-width)' : 'var(--preview-width)',
                 // Match height of left and right preview cards to center slider
                 height: '100%',
-                opacity: isActive ? 1 : 0.65,
+                opacity: 1,
                 zIndex: isActive ? 2 : 1,
                 pointerEvents: isActive ? 'auto' : 'none',
                 transition:
                   reducedMotion || isDragging || changesSide
                     ? 'none'
-                    : 'left 560ms cubic-bezier(0.4,0,0.2,1), width 560ms cubic-bezier(0.4,0,0.2,1), opacity 560ms ease',
+                    : 'left 560ms cubic-bezier(0.4,0,0.2,1), width 560ms cubic-bezier(0.4,0,0.2,1)',
               }}
             >
               <OpportunitySlide card={card} isActive={isActive} />

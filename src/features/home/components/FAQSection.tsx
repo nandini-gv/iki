@@ -116,6 +116,7 @@ function FaqRow({
 export function FAQSection() {
   const [selectedTopic, setSelectedTopic] = useState<FaqTopic>(faqContent.defaultTopic);
   const [openIndex, setOpenIndex] = useState(-1);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(true);
   const instanceId = useId();
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const topicId = selectedTopic.toLowerCase().replace(/\s+/g, '-');
@@ -166,86 +167,121 @@ export function FAQSection() {
             >
               {faqContent.headingPrefix}
             </Typography>
-            <Typography
-              component="span"
+            {/* Accordion header with arrow for IKI category navigation */}
+            <ButtonBase
+              type="button"
+              onClick={() => setIsCategoryOpen((prev) => !prev)}
+              aria-expanded={isCategoryOpen}
+              aria-controls="faq-category-accordion-content"
+              aria-label="Toggle FAQ categories"
               sx={{
-                display: 'block',
-                fontSize: 'clamp(1.75rem, 2.5vw, 2.25rem)',
-                fontWeight: 600,
-                lineHeight: 1.2,
-                letterSpacing: '-0.02em',
-                color: 'primary.main',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 1.25,
                 mt: 0.25,
-                mb: { xs: 3, md: 4 },
+                mb: { xs: 2.5, md: 3 },
+                textAlign: 'left',
+                borderRadius: 1,
+                color: 'primary.main',
+                p: 0,
+                '&.Mui-focusVisible': {
+                  outline: '2px solid',
+                  outlineColor: 'primary.main',
+                  outlineOffset: 2,
+                },
               }}
             >
-              IKI
-            </Typography>
-            <Box
-              role="group"
-              aria-label="FAQ topics"
-              sx={{
-                display: 'flex',
-                flexDirection: { xs: 'row', md: 'column' },
-                flexWrap: { xs: 'wrap', md: 'nowrap' },
-                gap: { xs: 1, md: 0.5 },
-              }}
-            >
-              {faqTopics.map((topic) => {
-                const active = topic === selectedTopic;
-                const label = topic === 'IKI' ? 'About IKI' : topic;
-                return (
-                  <ButtonBase
-                    key={topic}
-                    type="button"
-                    disableRipple
-                    aria-pressed={active}
-                    onClick={() => handleTopicChange(topic)}
-                    sx={{
-                      justifyContent: 'flex-start',
-                      minHeight: 44,
-                      width: { xs: 'auto', md: '100%' },
-                      // Blue vertical indicator ONLY on active category; NO vertical border on inactive categories
-                      borderLeft: {
-                        xs: 'none',
-                        md: active ? '3px solid' : 'none',
-                      },
-                      borderBottom: {
-                        xs: active ? '2.5px solid' : 'none',
-                        md: 'none',
-                      },
-                      borderColor: active ? 'primary.main' : 'transparent',
-                      // Precise padding so text alignment never shifts between active and inactive states
-                      pl: {
-                        xs: 1.75,
-                        md: active ? 2 : '19px',
-                      },
-                      pr: { xs: 1.75, md: 2 },
-                      py: { xs: 1, md: 1.25 },
-                      borderRadius: 0,
-                      textAlign: 'left',
-                      fontSize: '1rem',
-                      fontWeight: active ? 600 : 400,
-                      color: active ? 'text.primary' : 'text.secondary',
-                      transition: reducedMotion
-                        ? 'none'
-                        : 'color 0.2s ease, background-color 0.2s ease',
-                      '&:hover': {
-                        bgcolor: 'action.hover',
-                        color: 'text.primary',
-                      },
-                      '&.Mui-focusVisible': {
-                        outline: '2px solid',
-                        outlineColor: 'primary.main',
-                        outlineOffset: -2,
-                      },
-                    }}
-                  >
-                    {label}
-                  </ButtonBase>
-                );
-              })}
-            </Box>
+              <Typography
+                component="span"
+                sx={{
+                  fontSize: 'clamp(1.75rem, 2.5vw, 2.25rem)',
+                  fontWeight: 600,
+                  lineHeight: 1.2,
+                  letterSpacing: '-0.02em',
+                  color: 'primary.main',
+                }}
+              >
+                IKI
+              </Typography>
+              <KeyboardArrowDownIcon
+                sx={{
+                  fontSize: { xs: 28, md: 32 },
+                  color: 'primary.main',
+                  transform: isCategoryOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: reducedMotion ? 'none' : 'transform 240ms cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+              />
+            </ButtonBase>
+
+            {/* Accordion content: categories list */}
+            <Collapse in={isCategoryOpen} id="faq-category-accordion-content">
+              <Box
+                role="group"
+                aria-label="FAQ topics"
+                sx={{
+                  display: 'flex',
+                  flexDirection: { xs: 'row', md: 'column' },
+                  flexWrap: { xs: 'wrap', md: 'nowrap' },
+                  gap: { xs: 1, md: 0.5 },
+                  pb: { xs: 2, md: 0 },
+                }}
+              >
+                {faqTopics.map((topic) => {
+                  const active = topic === selectedTopic;
+                  const label = topic === 'IKI' ? 'About IKI' : topic;
+                  return (
+                    <ButtonBase
+                      key={topic}
+                      type="button"
+                      disableRipple
+                      aria-pressed={active}
+                      onClick={() => handleTopicChange(topic)}
+                      sx={{
+                        justifyContent: 'flex-start',
+                        minHeight: 44,
+                        width: { xs: 'auto', md: '100%' },
+                        // Blue vertical indicator ONLY on active category; NO vertical border on inactive categories
+                        borderLeft: {
+                          xs: 'none',
+                          md: active ? '3px solid' : 'none',
+                        },
+                        borderBottom: {
+                          xs: active ? '2.5px solid' : 'none',
+                          md: 'none',
+                        },
+                        borderColor: active ? 'primary.main' : 'transparent',
+                        // Precise padding so text alignment never shifts between active and inactive states
+                        pl: {
+                          xs: 1.75,
+                          md: active ? 2 : '19px',
+                        },
+                        pr: { xs: 1.75, md: 2 },
+                        py: { xs: 1, md: 1.25 },
+                        borderRadius: 0,
+                        textAlign: 'left',
+                        fontSize: '1rem',
+                        fontWeight: active ? 600 : 400,
+                        color: active ? 'text.primary' : 'text.secondary',
+                        transition: reducedMotion
+                          ? 'none'
+                          : 'color 0.2s ease, background-color 0.2s ease',
+                        '&:hover': {
+                          bgcolor: 'action.hover',
+                          color: 'text.primary',
+                        },
+                        '&.Mui-focusVisible': {
+                          outline: '2px solid',
+                          outlineColor: 'primary.main',
+                          outlineOffset: -2,
+                        },
+                      }}
+                    >
+                      {label}
+                    </ButtonBase>
+                  );
+                })}
+              </Box>
+            </Collapse>
           </Reveal>
 
           {/* Right Column: Full-Width Accordion Rows with 10px right spacing */}

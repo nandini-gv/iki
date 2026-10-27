@@ -40,11 +40,11 @@ export function ConversationSection() {
       component="section"
       aria-label="Start a Conversation"
       sx={{
-        // Background color #dcdad8 per user request
-        bgcolor: '#dcdad8',
+        // Background color #f9f9f9 per user request
+        bgcolor: '#f9f9f9',
         color: 'text.primary',
         py: { xs: 6, md: 8, lg: 9 },
-        borderTop: '1px solid rgba(0,0,0,0.08)',
+        borderTop: '1px solid rgba(0,0,0,0.06)',
       }}
     >
       <Container maxWidth="xl">

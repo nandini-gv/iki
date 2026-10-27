@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   AppBar,
   Box,
@@ -79,8 +79,18 @@ function AnnouncementBar() {
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <Box
@@ -95,19 +105,20 @@ export function SiteHeader() {
       {/* Announcement Bar */}
       <AnnouncementBar />
 
-      {/* Transparent Navigation Bar */}
+      {/* Navigation Bar with Glass Effect on Scroll */}
       <AppBar
         component="header"
         position="static"
         elevation={0}
         sx={{
-          backgroundColor: 'transparent',
+          backgroundColor: scrolled ? 'rgba(10, 10, 11, 0.78)' : 'transparent',
           backgroundImage: 'none',
-          backdropFilter: 'none',
-          WebkitBackdropFilter: 'none',
-          boxShadow: 'none',
-          borderBottom: 'none',
+          backdropFilter: scrolled ? 'blur(16px) saturate(180%)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(16px) saturate(180%)' : 'none',
+          boxShadow: scrolled ? '0 4px 20px rgba(0, 0, 0, 0.2)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.08)' : 'none',
           color: '#ffffff',
+          transition: 'background-color 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease',
         }}
       >
         <Container maxWidth="xl">

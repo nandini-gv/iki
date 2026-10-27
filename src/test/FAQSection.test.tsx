@@ -125,6 +125,8 @@ describe('FAQSection', () => {
     const user = userEvent.setup();
     renderFAQ();
     await user.tab();
+    expect(screen.getByRole('button', { name: 'Toggle FAQ categories' })).toHaveFocus();
+    await user.tab();
     expect(screen.getByRole('button', { name: 'About IKI' })).toHaveFocus();
     await user.tab();
     expect(screen.getByRole('button', { name: 'Job Seekers' })).toHaveFocus();
