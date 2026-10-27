@@ -75,8 +75,8 @@ export function HeroSection() {
       aria-label="Hero — We Connect Talent to Opportunity"
       sx={{
         position: 'relative',
-        // Reduced height by 35-40px to ensure slick dots are visible at first glance
-        minHeight: { xs: 520, sm: 580, md: 620, lg: 680 },
+        // Increased height by 25px per user request
+        minHeight: { xs: 545, sm: 605, md: 645, lg: 705 },
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
