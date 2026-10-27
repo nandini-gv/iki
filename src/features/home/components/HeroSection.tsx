@@ -11,14 +11,27 @@ import {
 import { FONT_STACK_SERIF, IKI_COLORS } from '../../../app/theme';
 import { heroContent } from '../data/homeContent';
 
-const SLIDE_IMAGES = [
-  '/images/section1-slide1.jpg',
-  '/images/section1-slide2.jpg',
-  '/images/section1-slide3.jpg',
-  '/images/slide2.jpg',
-  '/images/grid13.jpg',
-  '/images/grid1.jpg',
-];
+// Dynamically discover all available hero slide images without hardcoding specific files
+const discoveredSlideModules = import.meta.glob<string>(
+  [
+    '../../../assets/images/section1-slide*.{jpg,jpeg,png,webp,avif}',
+    '../../../assets/images/slide*.{jpg,jpeg,webp,avif}',
+    '../../../assets/images/hero-slide*.{jpg,jpeg,png,webp,avif}',
+    '../../../assets/images/hero/*.{jpg,jpeg,png,webp,avif}',
+    '../../../assets/images/slides/*.{jpg,jpeg,png,webp,avif}',
+  ],
+  { eager: true, query: '?url', import: 'default' }
+);
+
+// Filter out mobile-only screenshots, deduplicate, and sort naturally
+const DISCOVERED_SLIDES: string[] = Array.from(
+  new Set(
+    Object.entries(discoveredSlideModules)
+      .filter(([filePath]) => !filePath.toLowerCase().includes('mobile'))
+      .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+      .map(([, url]) => url)
+  )
+);
 
 // Animated stat counter
 function AnimatedStat({ value, label }: { value: string; label: string }) {
@@ -54,6 +67,7 @@ function AnimatedStat({ value, label }: { value: string; label: string }) {
 export function HeroSection() {
   const [slideIdx, setSlideIdx] = useState(0);
   const [visible, setVisible] = useState(false);
+  const [availableSlides, setAvailableSlides] = useState<string[]>(DISCOVERED_SLIDES);
 
   useEffect(() => {
     // Entrance animation trigger
@@ -61,13 +75,50 @@ export function HeroSection() {
     return () => clearTimeout(t);
   }, []);
 
+  // Dynamically verify that each candidate slide image successfully loads.
+  // If an image was removed, fails to load, or 404s, it is completely excluded so no dark blank space ever appears.
   useEffect(() => {
-    // Auto-advance background slides (6-second interval)
+    if (typeof window === 'undefined' || DISCOVERED_SLIDES.length === 0) return;
+
+    let isMounted = true;
+    const verified: string[] = [];
+
+    const checks = DISCOVERED_SLIDES.map((url) => {
+      return new Promise<void>((resolve) => {
+        const img = new window.Image();
+        img.onload = () => {
+          verified.push(url);
+          resolve();
+        };
+        img.onerror = () => {
+          // If image does not exist or fails to load, omit it
+          resolve();
+        };
+        img.src = url;
+      });
+    });
+
+    Promise.all(checks).then(() => {
+      if (isMounted && verified.length > 0) {
+        setAvailableSlides(DISCOVERED_SLIDES.filter((u) => verified.includes(u)));
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Auto-advance background slides (6-second interval) considering only verified available images
+  useEffect(() => {
+    if (availableSlides.length <= 1) return;
     const interval = setInterval(() => {
-      setSlideIdx((i) => (i + 1) % SLIDE_IMAGES.length);
+      setSlideIdx((i) => (i + 1) % availableSlides.length);
     }, 6000);
     return () => clearInterval(interval);
-  }, []);
+  }, [availableSlides.length]);
+
+  const activeIdx = availableSlides.length > 0 ? slideIdx % availableSlides.length : 0;
 
   return (
     <Box
@@ -95,7 +146,7 @@ export function HeroSection() {
       }}
     >
       {/* ── Crossfading background slides with crystal-clear rendering ── */}
-      {SLIDE_IMAGES.map((src, i) => (
+      {availableSlides.map((src, i) => (
         <Box
           key={src}
           sx={{
@@ -105,7 +156,7 @@ export function HeroSection() {
             backgroundSize: 'cover',
             backgroundPosition: 'center 30%',
             backgroundRepeat: 'no-repeat',
-            opacity: i === slideIdx ? 1 : 0,
+            opacity: i === activeIdx ? 1 : 0,
             transform: 'translateZ(0)',
             WebkitBackfaceVisibility: 'hidden',
             backfaceVisibility: 'hidden',
@@ -116,14 +167,25 @@ export function HeroSection() {
         />
       ))}
 
+      {/* ── Very light tint overlay on slider: improves typography contrast without washing out image colors ── */}
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          backgroundColor: 'rgba(8, 12, 16, 0.28)',
+          zIndex: 1,
+          pointerEvents: 'none',
+        }}
+      />
+
       {/* ── Subtle bottom edge transition into Section 2 ── */}
       <Box
         sx={{
           position: 'absolute',
           inset: 0,
           background:
-            'linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.08) 12%, transparent 22%)',
-          zIndex: 1,
+            'linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.1) 12%, transparent 24%)',
+          zIndex: 2,
           pointerEvents: 'none',
         }}
       />
@@ -133,7 +195,7 @@ export function HeroSection() {
         maxWidth="xl"
         sx={{
           position: 'relative',
-          zIndex: 2,
+          zIndex: 3,
           pt: { xs: 'calc(88px + 16px)', md: 'calc(100px + 24px)' },
           pb: { xs: 4, md: 5 },
         }}
@@ -443,44 +505,48 @@ export function HeroSection() {
         </Box>
       </Box>
 
-      {/* ── Slick Slide indicators (visible at first glance) ── */}
-      <Stack
-        direction="row"
-        spacing={1}
-        alignItems="center"
-        sx={{
-          position: 'absolute',
-          bottom: { xs: 16, md: 24 },
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 3,
-          opacity: visible ? 1 : 0,
-          transition: 'opacity 0.7s ease 0.8s',
-        }}
-      >
-        {SLIDE_IMAGES.map((_, i) => (
-          <Box
-            key={i}
-            onClick={() => setSlideIdx(i)}
-            role="button"
-            tabIndex={0}
-            aria-label={`View background ${i + 1}`}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSlideIdx(i); }}
-            sx={{
-              width: i === slideIdx ? 32 : 8,
-              height: 8,
-              borderRadius: 9999,
-              backgroundColor: i === slideIdx ? '#ffffff' : 'rgba(255,255,255,0.4)',
-              cursor: 'pointer',
-              transition: 'all 0.4s cubic-bezier(0.4,0,0.2,1)',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-              '&:hover': {
-                backgroundColor: i === slideIdx ? '#ffffff' : 'rgba(255,255,255,0.85)',
-              },
-            }}
-          />
-        ))}
-      </Stack>
+      {/* ── Slide indicators (only rendered for verified available images) ── */}
+      {availableSlides.length > 1 && (
+        <Stack
+          direction="row"
+          spacing={1}
+          alignItems="center"
+          sx={{
+            position: 'absolute',
+            bottom: { xs: 16, md: 24 },
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 4,
+            opacity: visible ? 1 : 0,
+            transition: 'opacity 0.7s ease 0.8s',
+          }}
+        >
+          {availableSlides.map((_, i) => (
+            <Box
+              key={i}
+              onClick={() => setSlideIdx(i)}
+              role="button"
+              tabIndex={0}
+              aria-label={`View background ${i + 1}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') setSlideIdx(i);
+              }}
+              sx={{
+                width: i === activeIdx ? 32 : 8,
+                height: 8,
+                borderRadius: 9999,
+                backgroundColor: i === activeIdx ? '#ffffff' : 'rgba(255,255,255,0.4)',
+                cursor: 'pointer',
+                transition: 'all 0.4s cubic-bezier(0.4,0,0.2,1)',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                '&:hover': {
+                  backgroundColor: i === activeIdx ? '#ffffff' : 'rgba(255,255,255,0.85)',
+                },
+              }}
+            />
+          ))}
+        </Stack>
+      )}
     </Box>
   );
 }
