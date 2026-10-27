@@ -29,10 +29,10 @@ describe('HomePage', () => {
     expect(screen.getByRole('link', { name: /^Get Started$/i })).toBeInTheDocument();
 
     // 3. Four-Tile Promotional Grid (2x2 approved mockup layout)
-    expect(screen.getByRole('heading', { name: /PLURIBUS/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /WATCH SERIES 12/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /AirPods 5/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /Trade In/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Global Talent/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Enterprise Hiring/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Direct Access/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Career Advisory/i })).toBeInTheDocument();
 
     // 4. Wide Opportunities Carousel with partial neighboring cards
     expect(screen.getByLabelText(/Opportunities Showcase/i)).toBeInTheDocument();

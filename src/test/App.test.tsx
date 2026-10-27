@@ -3,16 +3,16 @@ import { render, screen } from '@testing-library/react';
 import App from '../app/App';
 
 describe('App Root', () => {
-  it('renders the application with complete homepage structure', () => {
+  it('renders the application with complete homepage structure', async () => {
     render(<App />);
     expect(
-      screen.getByRole('heading', { name: /We Connect Talent to Opportunity/i })
+      await screen.findByRole('heading', { name: /We Connect Talent to Opportunity/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: /Trusted by our innovation partners/i })
+      await screen.findByRole('heading', { name: /Trusted by our innovation partners/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: /We Believe In Meaningful Conversations/i })
+      await screen.findByRole('heading', { name: /We Believe In Meaningful Conversations/i })
     ).toBeInTheDocument();
   });
 });

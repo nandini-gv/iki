@@ -49,11 +49,16 @@ function FaqRow({
             justifyContent: 'space-between',
             gap: 2,
             py: { xs: 2, md: 2.25 },
+            px: { xs: 1, md: 1.5 },
+            mx: { xs: -1, md: -1.5 },
             textAlign: 'left',
-            borderRadius: 0,
-            color: 'text.primary',
-            transition: reducedMotion ? 'none' : 'color 0.2s ease',
-            '&:hover': { color: 'primary.main' },
+            borderRadius: '8px',
+            color: isOpen ? 'primary.main' : 'text.primary',
+            transition: reducedMotion ? 'none' : 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
+            '&:hover': {
+              color: 'primary.main',
+              bgcolor: 'rgba(0, 0, 0, 0.016)',
+            },
             '&.Mui-focusVisible': {
               outline: '2px solid',
               outlineColor: 'primary.main',
@@ -65,23 +70,37 @@ function FaqRow({
             component="span"
             sx={{
               fontSize: { xs: '1rem', md: '1.0625rem' },
-              fontWeight: 500,
+              fontWeight: isOpen ? 600 : 500,
               lineHeight: 1.45,
               letterSpacing: '-0.01em',
               color: 'inherit',
+              transition: 'color 0.2s ease',
             }}
           >
             {q}
           </Typography>
-          <KeyboardArrowDownIcon
+          <Box
             sx={{
-              fontSize: 24,
+              width: 32,
+              height: 32,
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               flexShrink: 0,
-              color: 'text.secondary',
-              transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-              transition: reducedMotion ? 'none' : 'transform 260ms cubic-bezier(0.4, 0, 0.2, 1)',
+              bgcolor: isOpen ? 'rgba(0, 113, 227, 0.1)' : 'rgba(0, 0, 0, 0.035)',
+              color: isOpen ? 'primary.main' : 'text.secondary',
+              transition: reducedMotion ? 'none' : 'all 0.26s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
-          />
+          >
+            <KeyboardArrowDownIcon
+              sx={{
+                fontSize: 20,
+                transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: reducedMotion ? 'none' : 'transform 260ms cubic-bezier(0.16, 1, 0.3, 1)',
+              }}
+            />
+          </Box>
         </ButtonBase>
       </Box>
       <Collapse
@@ -96,13 +115,14 @@ function FaqRow({
           ...(!isOpen && { visibility: 'hidden', height: 0 }),
         }}
       >
-        <Box sx={{ pb: 3.5, pt: 0.5, pr: { xs: 2, md: 6 } }}>
+        <Box sx={{ pb: 3.5, pt: 0.5, pr: { xs: 2, md: 6 }, pl: { xs: 1, md: 1.5 } }}>
           <Typography
             sx={{
               m: 0,
               fontSize: { xs: '0.9375rem', md: '1rem' },
               color: 'text.secondary',
-              lineHeight: 1.65,
+              lineHeight: 1.7,
+              letterSpacing: '-0.005em',
             }}
           >
             {a}
@@ -184,6 +204,7 @@ export function FAQSection() {
                 borderRadius: 1,
                 color: 'primary.main',
                 p: 0,
+                fontSize: '2.5rem !important',
                 '&.Mui-focusVisible': {
                   outline: '2px solid',
                   outlineColor: 'primary.main',
@@ -191,10 +212,10 @@ export function FAQSection() {
                 },
               }}
             >
-              <Typography
+              <Box
                 component="span"
                 sx={{
-                  fontSize: 'clamp(1.75rem, 2.5vw, 2.25rem)',
+                  fontSize: '2.5rem !important',
                   fontWeight: 600,
                   lineHeight: 1.2,
                   letterSpacing: '-0.02em',
@@ -202,10 +223,10 @@ export function FAQSection() {
                 }}
               >
                 IKI
-              </Typography>
+              </Box>
               <KeyboardArrowDownIcon
                 sx={{
-                  fontSize: { xs: 28, md: 32 },
+                  fontSize: '2.25rem',
                   color: 'primary.main',
                   transform: isCategoryOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                   transition: reducedMotion ? 'none' : 'transform 240ms cubic-bezier(0.4, 0, 0.2, 1)',
@@ -250,6 +271,9 @@ export function FAQSection() {
                           md: 'none',
                         },
                         borderColor: active ? 'primary.main' : 'transparent',
+                        bgcolor: active
+                          ? { xs: 'rgba(0, 113, 227, 0.08)', md: 'rgba(0, 113, 227, 0.035)' }
+                          : 'transparent',
                         // Precise padding so text alignment never shifts between active and inactive states
                         pl: {
                           xs: 1.75,
@@ -257,7 +281,7 @@ export function FAQSection() {
                         },
                         pr: { xs: 1.75, md: 2 },
                         py: { xs: 1, md: 1.25 },
-                        borderRadius: 0,
+                        borderRadius: { xs: '999px', md: '0 8px 8px 0' },
                         textAlign: 'left',
                         fontSize: '1rem',
                         fontWeight: active ? 600 : 400,
@@ -266,7 +290,9 @@ export function FAQSection() {
                           ? 'none'
                           : 'color 0.2s ease, background-color 0.2s ease',
                         '&:hover': {
-                          bgcolor: 'action.hover',
+                          bgcolor: active
+                            ? { xs: 'rgba(0, 113, 227, 0.12)', md: 'rgba(0, 113, 227, 0.06)' }
+                            : 'action.hover',
                           color: 'text.primary',
                         },
                         '&.Mui-focusVisible': {

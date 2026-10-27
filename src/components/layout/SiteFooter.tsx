@@ -71,7 +71,7 @@ export function SiteFooter() {
             </Typography>
 
             {/* Social Icons */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25 }}>
               <IconButton
                 aria-label="LinkedIn"
                 component="a"
@@ -81,13 +81,16 @@ export function SiteFooter() {
                 size="small"
                 sx={{
                   color: 'rgba(255, 255, 255, 0.75)',
-                  bgcolor: 'rgba(255, 255, 255, 0.05)',
+                  bgcolor: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
                   borderRadius: '50%',
                   p: 1,
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                   '&:hover': {
                     color: '#ffffff',
-                    bgcolor: 'rgba(0, 113, 227, 0.3)',
+                    bgcolor: 'rgba(0, 113, 227, 0.2)',
+                    borderColor: 'rgba(0, 113, 227, 0.45)',
+                    boxShadow: '0 4px 14px rgba(0, 113, 227, 0.3)',
                     transform: 'translateY(-2px)',
                   },
                 }}
@@ -103,13 +106,16 @@ export function SiteFooter() {
                 size="small"
                 sx={{
                   color: 'rgba(255, 255, 255, 0.75)',
-                  bgcolor: 'rgba(255, 255, 255, 0.05)',
+                  bgcolor: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
                   borderRadius: '50%',
                   p: 1,
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                   '&:hover': {
                     color: '#ffffff',
-                    bgcolor: 'rgba(0, 113, 227, 0.3)',
+                    bgcolor: 'rgba(0, 113, 227, 0.2)',
+                    borderColor: 'rgba(0, 113, 227, 0.45)',
+                    boxShadow: '0 4px 14px rgba(0, 113, 227, 0.3)',
                     transform: 'translateY(-2px)',
                   },
                 }}
@@ -125,13 +131,16 @@ export function SiteFooter() {
                 size="small"
                 sx={{
                   color: 'rgba(255, 255, 255, 0.75)',
-                  bgcolor: 'rgba(255, 255, 255, 0.05)',
+                  bgcolor: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
                   borderRadius: '50%',
                   p: 1,
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                   '&:hover': {
                     color: '#ffffff',
-                    bgcolor: 'rgba(0, 113, 227, 0.3)',
+                    bgcolor: 'rgba(0, 113, 227, 0.2)',
+                    borderColor: 'rgba(0, 113, 227, 0.45)',
+                    boxShadow: '0 4px 14px rgba(0, 113, 227, 0.3)',
                     transform: 'translateY(-2px)',
                   },
                 }}
@@ -147,13 +156,16 @@ export function SiteFooter() {
                 size="small"
                 sx={{
                   color: 'rgba(255, 255, 255, 0.75)',
-                  bgcolor: 'rgba(255, 255, 255, 0.05)',
+                  bgcolor: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
                   borderRadius: '50%',
                   p: 1,
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                   '&:hover': {
                     color: '#ffffff',
-                    bgcolor: 'rgba(0, 113, 227, 0.3)',
+                    bgcolor: 'rgba(0, 113, 227, 0.2)',
+                    borderColor: 'rgba(0, 113, 227, 0.45)',
+                    boxShadow: '0 4px 14px rgba(0, 113, 227, 0.3)',
                     transform: 'translateY(-2px)',
                   },
                 }}
@@ -187,15 +199,15 @@ export function SiteFooter() {
                       href={item.href}
                       sx={{
                         display: 'inline-block',
-                        py: 0.25,
+                        py: 0.35,
                         color: 'rgba(255, 255, 255, 0.65)',
                         fontSize: '0.825rem',
                         lineHeight: 1.6,
                         textDecoration: 'none',
-                        transition: 'color 0.15s ease, transform 0.15s ease',
+                        transition: 'color 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                         '&:hover': {
                           color: '#ffffff',
-                          transform: 'translateX(2px)',
+                          transform: 'translateX(3px)',
                         },
                       }}
                     >

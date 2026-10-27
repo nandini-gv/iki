@@ -1,5 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
-import { Box, Button, Container, Typography } from '@mui/material';
+import { ErrorPage } from './ErrorPage';
 
 interface Props {
   children: ReactNode;
@@ -8,15 +8,17 @@ interface Props {
 
 interface State {
   hasError: boolean;
+  error?: Error | null;
 }
 
 export class ErrorBoundary extends Component<Props, State> {
   public override state: State = {
     hasError: false,
+    error: null,
   };
 
-  public static getDerivedStateFromError(_: Error): State {
-    return { hasError: true };
+  public static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
   }
 
   public override componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
@@ -27,7 +29,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   private handleReset = (): void => {
-    this.setState({ hasError: false });
+    this.setState({ hasError: false, error: null });
     window.location.reload();
   };
 
@@ -38,33 +40,10 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <Container maxWidth="sm" sx={{ py: 8 }}>
-          <Box
-            sx={{
-              p: 4,
-              textAlign: 'center',
-              borderRadius: 3,
-              bgcolor: 'background.paper',
-              border: '1px solid',
-              borderColor: 'divider',
-            }}
-            role="alert"
-          >
-            <Typography variant="h5" component="h1" gutterBottom fontWeight={600}>
-              Something went wrong
-            </Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-              An unexpected error occurred while loading this view. Please try reloading the page.
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={this.handleReset}
-            >
-              Reload page
-            </Button>
-          </Box>
-        </Container>
+        <ErrorPage
+          error={this.state.error}
+          onReset={this.handleReset}
+        />
       );
     }
 

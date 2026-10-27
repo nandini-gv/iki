@@ -1,6 +1,5 @@
 import {
   useCallback,
-  useEffect,
   useRef,
   useState,
   type KeyboardEvent,
@@ -17,8 +16,6 @@ import {
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import PauseIcon from '@mui/icons-material/Pause';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { IKI_COLORS } from '../../../app/theme';
 import { ResponsiveImage } from '../../../components/common/ResponsiveImage';
 
@@ -143,8 +140,10 @@ function OpportunitySlide({ card, isActive }: { card: OpportunityCard; isActive:
         overflow: 'hidden',
         // Sharp edge or very mild border radius < 5px per user request
         borderRadius: '2px',
-        boxShadow: isActive ? '0 16px 40px rgba(0,0,0,0.2)' : 'none',
-        transition: 'box-shadow 0.4s ease',
+        boxShadow: isActive
+          ? '0 24px 64px -12px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+          : 'none',
+        transition: 'box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
     >
       <ResponsiveImage src={card.bg} alt="" sx={{ '& img': { objectFit: 'cover' } }} />
@@ -172,24 +171,36 @@ function OpportunitySlide({ card, isActive }: { card: OpportunityCard; isActive:
           transition: 'opacity 0.3s ease',
         }}
       >
-        {/* Top Company Badge */}
+        {/* Top Company Badge with frosted glass pill */}
         <Stack
           direction="row"
           alignItems="center"
           spacing={1.25}
-          sx={{ mb: 1.5, position: 'absolute', top: { xs: 20, md: 28 }, left: { xs: 20, md: 36 } }}
+          sx={{
+            mb: 1.5,
+            position: 'absolute',
+            top: { xs: 20, md: 28 },
+            left: { xs: 20, md: 36 },
+            backgroundColor: 'rgba(10, 10, 12, 0.65)',
+            backdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            borderRadius: 9999,
+            px: 1.5,
+            py: 0.6,
+            boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+          }}
         >
           <Box
             sx={{
-              width: 32,
-              height: 32,
-              borderRadius: '8px',
+              width: 30,
+              height: 30,
+              borderRadius: '7px',
               backgroundColor: card.companyColor,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontWeight: 700,
-              fontSize: '0.9rem',
+              fontSize: '0.875rem',
               color: 'common.white',
               boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
               flexShrink: 0,
@@ -200,7 +211,7 @@ function OpportunitySlide({ card, isActive }: { card: OpportunityCard; isActive:
           <Typography
             sx={{
               color: 'rgba(255,255,255,0.95)',
-              fontSize: { xs: '0.85rem', md: '0.95rem' },
+              fontSize: { xs: '0.85rem', md: '0.92rem' },
               fontWeight: 600,
               letterSpacing: '-0.01em',
               textShadow: '0 1px 4px rgba(0,0,0,0.4)',
@@ -252,21 +263,24 @@ function OpportunitySlide({ card, isActive }: { card: OpportunityCard; isActive:
             href="#opportunities"
             tabIndex={isActive ? 0 : -1}
             sx={{
-              backgroundColor: '#ffffff',
-              color: '#111111',
+              background: 'linear-gradient(180deg, #ffffff 0%, #edf0f3 100%)',
+              color: '#0a0a0b',
               fontFamily: 'inherit',
               fontWeight: 600,
               fontSize: '0.875rem',
-              px: 3,
-              py: 1,
+              px: 3.25,
+              py: 1.1,
               borderRadius: 9999,
               textTransform: 'none',
-              boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
-              transition: 'all 0.2s ease',
+              boxShadow: '0 4px 18px rgba(0, 0, 0, 0.35), inset 0 1px 0 #ffffff',
+              transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
               '&:hover': {
-                backgroundColor: 'rgba(255,255,255,0.92)',
-                transform: 'scale(1.02)',
-                boxShadow: '0 6px 20px rgba(0,0,0,0.4)',
+                background: '#ffffff',
+                transform: 'translateY(-1.5px)',
+                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45), inset 0 1px 0 #ffffff',
+              },
+              '&:active': {
+                transform: 'scale(0.97)',
               },
             }}
           >
@@ -314,11 +328,6 @@ function OpportunitySlide({ card, isActive }: { card: OpportunityCard; isActive:
 
 export function OpportunitiesCarousel() {
   const [selection, setSelection] = useState({ active: 0, previous: 0 });
-  const [isInView, setIsInView] = useState(false);
-  const [isDocumentVisible, setIsDocumentVisible] = useState(() => document.visibilityState === 'visible');
-  const [isHovered, setIsHovered] = useState(false);
-  const [hasFocus, setHasFocus] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -327,8 +336,6 @@ export function OpportunitiesCarousel() {
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const total = OPPORTUNITIES.length;
   const activeSlide = selection.active;
-  const autoplayRunning =
-    isInView && isDocumentVisible && !isHovered && !hasFocus && !isPaused && !isDragging && !reducedMotion;
 
   const selectSlide = useCallback((index: number) => {
     setSelection((current) => (current.active === index ? current : { active: index, previous: current.active }));
@@ -340,31 +347,6 @@ export function OpportunitiesCarousel() {
       previous: current.active,
     }));
   }, []);
-
-  useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage || typeof IntersectionObserver === 'undefined') return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(Boolean(entry?.isIntersecting && entry.intersectionRatio >= 0.15));
-      },
-      { threshold: 0.15 }
-    );
-    observer.observe(stage);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const updateVisibility = () => setIsDocumentVisible(document.visibilityState === 'visible');
-    document.addEventListener('visibilitychange', updateVisibility);
-    return () => document.removeEventListener('visibilitychange', updateVisibility);
-  }, []);
-
-  useEffect(() => {
-    if (!autoplayRunning) return;
-    const timer = window.setInterval(() => stepSlide(1), 6000);
-    return () => window.clearInterval(timer);
-  }, [autoplayRunning, activeSlide, stepSlide]);
 
   function handleKeyDown(event: KeyboardEvent<HTMLElement>) {
     if (event.altKey || event.ctrlKey || event.metaKey) return;
@@ -448,12 +430,6 @@ export function OpportunitiesCarousel() {
       aria-label="Opportunities Showcase"
       aria-roledescription="carousel"
       onKeyDown={handleKeyDown}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onFocusCapture={() => setHasFocus(true)}
-      onBlurCapture={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setHasFocus(false);
-      }}
       sx={{
         backgroundColor: 'common.white',
         color: 'text.primary',
@@ -556,17 +532,20 @@ export function OpportunitiesCarousel() {
         })}
       </Box>
 
-      {/* Bottom controls: Previous Arrow + Slick Dots + Next Arrow + Play/Pause */}
+      {/* Bottom controls: Centered Dots + Right-aligned Arrow Navigation */}
       <Container maxWidth="xl">
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
-          spacing={2}
-          sx={{ mt: 3, position: 'relative' }}
+        <Box
+          sx={{
+            mt: 3,
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: 44,
+          }}
         >
-          {/* Centered Slick Dots (DOM order 1st for accessible tabbing) */}
-          <Stack direction="row" alignItems="center" spacing={1} sx={{ order: 0 }}>
+          {/* Centered Slick Dots */}
+          <Stack direction="row" alignItems="center" spacing={1}>
             {OPPORTUNITIES.map((card, index) => (
               <IconButton
                 key={card.id}
@@ -588,8 +567,9 @@ export function OpportunitiesCarousel() {
                     height: 8,
                     flexShrink: 0,
                     borderRadius: 9999,
-                    backgroundColor: index === activeSlide ? IKI_COLORS.accent : 'rgba(0,0,0,0.2)',
-                    transition: reducedMotion ? 'none' : 'all 320ms cubic-bezier(0.4,0,0.2,1)',
+                    backgroundColor: index === activeSlide ? IKI_COLORS.accent : 'rgba(0,0,0,0.22)',
+                    boxShadow: index === activeSlide ? '0 0 10px rgba(0, 113, 227, 0.45)' : 'none',
+                    transition: reducedMotion ? 'none' : 'all 320ms cubic-bezier(0.16, 1, 0.3, 1)',
                     cursor: 'pointer',
                     '&:hover': {
                       backgroundColor: index === activeSlide ? IKI_COLORS.accent : 'rgba(0,0,0,0.4)',
@@ -600,68 +580,67 @@ export function OpportunitiesCarousel() {
             ))}
           </Stack>
 
-          {/* Previous Arrow Button (Visually before dots via order: -1) */}
-          <IconButton
-            type="button"
-            aria-label="Previous slide"
-            onClick={() => stepSlide(-1)}
-            disableRipple={reducedMotion}
+          {/* Right-aligned Navigation Arrows (positioned on the right where play/pause was) */}
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={1.25}
             sx={{
-              order: -1,
-              width: 34,
-              height: 34,
-              borderRadius: '50%',
-              border: '1px solid rgba(0,0,0,0.15)',
-              color: 'text.primary',
-              transition: 'all 0.2s ease',
-              '&:hover': { bgcolor: 'rgba(0,0,0,0.06)', borderColor: 'rgba(0,0,0,0.3)' },
+              position: 'absolute',
+              right: 0,
             }}
           >
-            <ArrowBackIcon sx={{ fontSize: 18 }} />
-          </IconButton>
-
-          {/* Next Arrow Button (Visually after dots via order: 1) */}
-          <IconButton
-            type="button"
-            aria-label="Next slide"
-            onClick={() => stepSlide(1)}
-            disableRipple={reducedMotion}
-            sx={{
-              order: 1,
-              width: 34,
-              height: 34,
-              borderRadius: '50%',
-              border: '1px solid rgba(0,0,0,0.15)',
-              color: 'text.primary',
-              transition: 'all 0.2s ease',
-              '&:hover': { bgcolor: 'rgba(0,0,0,0.06)', borderColor: 'rgba(0,0,0,0.3)' },
-            }}
-          >
-            <ArrowForwardIcon sx={{ fontSize: 18 }} />
-          </IconButton>
-
-          {/* Autoplay Play/Pause Button on Right side */}
-          <Box sx={{ order: 2, position: { sm: 'absolute' }, right: 0, display: { xs: 'none', sm: 'block' } }}>
             <IconButton
               type="button"
-              aria-label={isPaused || reducedMotion ? 'Resume autoplay' : 'Pause autoplay'}
-              aria-pressed={isPaused || reducedMotion}
-              disabled={reducedMotion}
-              title={reducedMotion ? 'Autoplay is disabled while reduced motion is enabled' : undefined}
-              onClick={() => setIsPaused((paused) => !paused)}
+              aria-label="Previous slide"
+              onClick={() => stepSlide(-1)}
+              disableRipple={reducedMotion}
               sx={{
-                width: 32,
-                height: 32,
+                width: 36,
+                height: 36,
                 borderRadius: '50%',
-                border: '1px solid rgba(0,0,0,0.12)',
-                color: 'text.secondary',
-                '&:hover': { bgcolor: 'rgba(0,0,0,0.05)', color: 'text.primary' },
+                border: '1px solid rgba(0,0,0,0.15)',
+                color: 'text.primary',
+                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                '&:hover': {
+                  bgcolor: 'rgba(0,0,0,0.06)',
+                  borderColor: 'rgba(0,0,0,0.35)',
+                  transform: 'scale(1.06)',
+                },
+                '&:active': {
+                  transform: 'scale(0.94)',
+                },
               }}
             >
-              {isPaused || reducedMotion ? <PlayArrowIcon sx={{ fontSize: 16 }} /> : <PauseIcon sx={{ fontSize: 16 }} />}
+              <ArrowBackIcon sx={{ fontSize: 18 }} />
             </IconButton>
-          </Box>
-        </Stack>
+
+            <IconButton
+              type="button"
+              aria-label="Next slide"
+              onClick={() => stepSlide(1)}
+              disableRipple={reducedMotion}
+              sx={{
+                width: 36,
+                height: 36,
+                borderRadius: '50%',
+                border: '1px solid rgba(0,0,0,0.15)',
+                color: 'text.primary',
+                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                '&:hover': {
+                  bgcolor: 'rgba(0,0,0,0.06)',
+                  borderColor: 'rgba(0,0,0,0.35)',
+                  transform: 'scale(1.06)',
+                },
+                '&:active': {
+                  transform: 'scale(0.94)',
+                },
+              }}
+            >
+              <ArrowForwardIcon sx={{ fontSize: 18 }} />
+            </IconButton>
+          </Stack>
+        </Box>
 
         {/* Visually hidden accessible View All Jobs link */}
         <Box
@@ -685,7 +664,7 @@ export function OpportunitiesCarousel() {
 
       <Box
         role="status"
-        aria-live={autoplayRunning ? 'off' : 'polite'}
+        aria-live="polite"
         aria-atomic="true"
         sx={{
           position: 'absolute',

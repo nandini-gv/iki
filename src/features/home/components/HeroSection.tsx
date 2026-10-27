@@ -4,16 +4,17 @@ import {
   AvatarGroup,
   Box,
   Button,
-  Chip,
   Container,
   Stack,
   Typography,
 } from '@mui/material';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { FONT_STACK_SERIF, IKI_COLORS } from '../../../app/theme';
 import { heroContent } from '../data/homeContent';
 
 const SLIDE_IMAGES = [
+  '/images/section1-slide1.jpg',
+  '/images/section1-slide2.jpg',
+  '/images/section1-slide3.jpg',
   '/images/slide2.jpg',
   '/images/grid13.jpg',
   '/images/grid1.jpg',
@@ -93,7 +94,7 @@ export function HeroSection() {
         backgroundColor: '#080C10',
       }}
     >
-      {/* ── Crossfading background slides ── */}
+      {/* ── Crossfading background slides with crystal-clear rendering ── */}
       {SLIDE_IMAGES.map((src, i) => (
         <Box
           key={src}
@@ -105,33 +106,25 @@ export function HeroSection() {
             backgroundPosition: 'center 30%',
             backgroundRepeat: 'no-repeat',
             opacity: i === slideIdx ? 1 : 0,
-            transition: 'opacity 1.2s cubic-bezier(0.4,0,0.2,1)',
+            transform: 'translateZ(0)',
+            WebkitBackfaceVisibility: 'hidden',
+            backfaceVisibility: 'hidden',
+            imageRendering: '-webkit-optimize-contrast',
+            transition: 'opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
             zIndex: 0,
           }}
         />
       ))}
 
-      {/* ── Gradient vignettes ── */}
-      {/* Bottom fade */}
+      {/* ── Subtle bottom edge transition into Section 2 ── */}
       <Box
         sx={{
           position: 'absolute',
           inset: 0,
           background:
-            'linear-gradient(to top, rgba(8,12,16,0.96) 0%, rgba(8,12,16,0.55) 45%, rgba(8,12,16,0.2) 100%)',
+            'linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.08) 12%, transparent 22%)',
           zIndex: 1,
-        }}
-      />
-      {/* Left content fade */}
-      <Box
-        sx={{
-          position: 'absolute',
-          inset: 0,
-          background: {
-            xs: 'linear-gradient(90deg, rgba(8,12,16,0.95) 0%, rgba(8,12,16,0.65) 100%)',
-            md: 'linear-gradient(90deg, rgba(8,12,16,0.92) 0%, rgba(8,12,16,0.5) 55%, rgba(8,12,16,0.05) 100%)',
-          },
-          zIndex: 1,
+          pointerEvents: 'none',
         }}
       />
 
@@ -146,7 +139,7 @@ export function HeroSection() {
         }}
       >
         <Box sx={{ maxWidth: { xs: '100%', sm: 560, md: 620, lg: 680 } }}>
-          {/* Pill badge */}
+          {/* Pill badge with live pulsating radar dot */}
           <Box
             sx={{
               opacity: visible ? 1 : 0,
@@ -155,23 +148,43 @@ export function HeroSection() {
               mb: 2,
             }}
           >
-            <Chip
-              icon={<TrendingUpIcon sx={{ fontSize: '14px !important', color: IKI_COLORS.blueLight + ' !important' }} />}
-              label={heroContent.eyebrow}
-              size="small"
+            <Box
               sx={{
-                backgroundColor: 'rgba(0,113,227,0.15)',
-                border: '1px solid rgba(0,113,227,0.3)',
-                color: IKI_COLORS.blueLight,
-                fontWeight: 600,
-                fontSize: '0.75rem',
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                backdropFilter: 'blur(8px)',
-                height: 28,
-                '& .MuiChip-label': { px: 1.25 },
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 1.25,
+                px: 1.75,
+                py: 0.65,
+                borderRadius: 9999,
+                backgroundColor: 'rgba(0, 113, 227, 0.12)',
+                border: '1px solid rgba(59, 158, 255, 0.35)',
+                backdropFilter: 'blur(12px)',
+                boxShadow: '0 2px 14px rgba(0, 113, 227, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.12)',
               }}
-            />
+            >
+              <Box
+                sx={{
+                  width: 7,
+                  height: 7,
+                  borderRadius: '50%',
+                  bgcolor: '#3B9EFF',
+                  boxShadow: '0 0 8px #3B9EFF',
+                  animation: 'pulseRadar 2.2s infinite',
+                }}
+              />
+              <Typography
+                sx={{
+                  color: '#79BAFF',
+                  fontWeight: 600,
+                  fontSize: '0.75rem',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  lineHeight: 1,
+                }}
+              >
+                {heroContent.eyebrow}
+              </Typography>
+            </Box>
           </Box>
 
           {/* Main headline */}
@@ -192,6 +205,7 @@ export function HeroSection() {
                 lineHeight: 1.08,
                 letterSpacing: '-0.02em',
                 color: '#ffffff',
+                textShadow: '0 2px 24px rgba(0, 0, 0, 0.75), 0 1px 4px rgba(0, 0, 0, 0.85)',
                 mb: 2,
               }}
             >
@@ -200,10 +214,7 @@ export function HeroSection() {
               <Box
                 component="span"
                 sx={{
-                  color: 'transparent',
-                  backgroundImage: `linear-gradient(135deg, ${IKI_COLORS.blueLight} 0%, #4FC3F7 50%, ${IKI_COLORS.blueLight} 100%)`,
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text',
+                  color: '#ffffff',
                 }}
               >
                 {heroContent.titleLine2}
@@ -222,12 +233,13 @@ export function HeroSection() {
             <Typography
               variant="body1"
               sx={{
-                color: 'rgba(255, 255, 255, 0.75)',
+                color: 'rgba(255, 255, 255, 0.88)',
                 fontSize: { xs: '0.95rem', sm: '1.025rem', md: '1.08rem' },
                 lineHeight: 1.6,
                 maxWidth: 480,
                 mb: 3.5,
                 letterSpacing: '-0.005em',
+                textShadow: '0 1px 12px rgba(0, 0, 0, 0.75)',
               }}
             >
               {heroContent.subtitle}
@@ -247,19 +259,36 @@ export function HeroSection() {
                 variant="contained"
                 href="#opportunities"
                 sx={{
-                  backgroundColor: IKI_COLORS.accent,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  background: 'linear-gradient(135deg, #0071e3 0%, #005bb5 100%)',
                   color: '#ffffff',
-                  px: 3.25,
-                  py: 1.15,
-                  fontSize: '0.9rem',
+                  px: 3.5,
+                  py: 1.25,
+                  fontSize: '0.92rem',
                   fontWeight: 600,
                   borderRadius: 9999,
-                  boxShadow: '0 4px 20px rgba(0,113,227,0.4)',
+                  boxShadow: '0 4px 20px rgba(0, 113, 227, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35)',
                   textTransform: 'none',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                  '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: '-100%',
+                    width: '60%',
+                    height: '100%',
+                    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent)',
+                    transform: 'skewX(-20deg)',
+                    transition: 'left 0.65s ease',
+                  },
                   '&:hover': {
-                    backgroundColor: IKI_COLORS.accentHover,
-                    boxShadow: '0 6px 26px rgba(0,113,227,0.55)',
+                    background: 'linear-gradient(135deg, #0077ed 0%, #0066cc 100%)',
+                    boxShadow: '0 8px 30px rgba(0, 113, 227, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.45)',
                     transform: 'translateY(-2px)',
+                    '&::after': {
+                      left: '160%',
+                    },
                   },
                 }}
               >
@@ -269,19 +298,21 @@ export function HeroSection() {
                 variant="outlined"
                 href="#partners"
                 sx={{
-                  borderColor: 'rgba(255, 255, 255, 0.3)',
+                  borderColor: 'rgba(255, 255, 255, 0.22)',
                   color: '#ffffff',
-                  px: 3,
-                  py: 1.15,
-                  fontSize: '0.9rem',
+                  px: 3.25,
+                  py: 1.25,
+                  fontSize: '0.92rem',
                   fontWeight: 500,
                   borderRadius: 9999,
-                  backgroundColor: 'rgba(255,255,255,0.06)',
-                  backdropFilter: 'blur(8px)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                  backdropFilter: 'blur(12px)',
+                  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
                   textTransform: 'none',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                   '&:hover': {
-                    borderColor: 'rgba(255,255,255,0.6)',
-                    backgroundColor: 'rgba(255,255,255,0.12)',
+                    borderColor: 'rgba(255, 255, 255, 0.5)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.14)',
                     transform: 'translateY(-2px)',
                   },
                 }}
@@ -291,30 +322,36 @@ export function HeroSection() {
             </Stack>
           </Box>
 
-          {/* Stats row */}
+          {/* Stats row with sleek frosted dock backing */}
           <Box
             sx={{
-              mt: { xs: 4, md: 5 },
+              mt: { xs: 4, md: 4.5 },
               opacity: visible ? 1 : 0,
               transform: visible ? 'translateY(0)' : 'translateY(16px)',
               transition: 'opacity 0.7s ease 0.55s, transform 0.7s ease 0.55s',
             }}
           >
-            <Stack direction="row" spacing={{ xs: 2.5, sm: 3.5 }} alignItems="center">
-              <Box
-                sx={{
-                  width: '1px',
-                  height: 36,
-                  bgcolor: 'rgba(255,255,255,0.12)',
-                  display: { xs: 'none', sm: 'block' },
-                }}
-              />
-              <AnimatedStat value="50K+" label="Professionals" />
-              <Box sx={{ width: '1px', height: 36, bgcolor: 'rgba(255,255,255,0.12)' }} />
-              <AnimatedStat value="10K+" label="Jobs Live" />
-              <Box sx={{ width: '1px', height: 36, bgcolor: 'rgba(255,255,255,0.12)' }} />
-              <AnimatedStat value="200+" label="Employers" />
-            </Stack>
+            <Box
+              sx={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                backdropFilter: 'blur(16px)',
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '20px',
+                px: { xs: 2.5, sm: 3.5 },
+                py: { xs: 1.25, sm: 1.5 },
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+              }}
+            >
+              <Stack direction="row" spacing={{ xs: 2.5, sm: 3.5 }} alignItems="center">
+                <AnimatedStat value="50K+" label="Professionals" />
+                <Box sx={{ width: '1px', height: 32, bgcolor: 'rgba(255,255,255,0.14)' }} />
+                <AnimatedStat value="10K+" label="Jobs Live" />
+                <Box sx={{ width: '1px', height: 32, bgcolor: 'rgba(255,255,255,0.14)' }} />
+                <AnimatedStat value="200+" label="Employers" />
+              </Stack>
+            </Box>
           </Box>
         </Box>
       </Container>
@@ -356,19 +393,24 @@ export function HeroSection() {
           </svg>
         </Box>
 
-        {/* Social proof avatar pill */}
+        {/* Social proof avatar pill with subtle float */}
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
             gap: 1.5,
-            bgcolor: 'rgba(10,10,11,0.72)',
-            backdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255,255,255,0.12)',
+            bgcolor: 'rgba(10, 10, 12, 0.78)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.16)',
             borderRadius: 9999,
-            px: 2,
-            py: 0.85,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+            px: 2.25,
+            py: 0.9,
+            boxShadow: '0 12px 36px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+            animation: 'floatSubtle 5s ease-in-out infinite',
+            transition: 'transform 0.25s ease',
+            '&:hover': {
+              transform: 'scale(1.03)',
+            },
           }}
         >
           <AvatarGroup

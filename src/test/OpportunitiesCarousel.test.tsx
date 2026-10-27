@@ -143,13 +143,6 @@ function expectActiveOpportunity(index: number) {
   return slide;
 }
 
-function setStageInView(isInView: boolean) {
-  const stage = screen.getByRole('group', { name: 'Browse opportunities' });
-  const observer = TestIntersectionObserver.instances.find((instance) => instance.targets.has(stage));
-  if (!observer) throw new Error('Carousel stage is not observed');
-  act(() => observer.notify(stage, isInView));
-}
-
 function advanceAutoplay(milliseconds = 6000) {
   act(() => { vi.advanceTimersByTime(milliseconds); });
 }
@@ -274,81 +267,27 @@ describe('OpportunitiesCarousel', () => {
     expect(screen.getByRole('button', { name: 'Go to slide 1' })).toHaveFocus();
   });
 
-  it('autoplays every 6000ms only while the stage is actually in view', () => {
+  it('does not autoplay and requires manual interaction', () => {
     vi.useFakeTimers();
     renderCarousel();
-    advanceAutoplay(12000);
-    expectActiveOpportunity(0);
-
-    setStageInView(true);
-    advanceAutoplay(5999);
-    expectActiveOpportunity(0);
-    advanceAutoplay(1);
-    expectActiveOpportunity(1);
-    setStageInView(false);
-    advanceAutoplay(12000);
-    expectActiveOpportunity(1);
-    setStageInView(true);
-    advanceAutoplay();
-    expectActiveOpportunity(2);
-  });
-
-  it('explicitly pauses and resumes autoplay', () => {
-    vi.useFakeTimers();
-    renderCarousel();
-    setStageInView(true);
-
-    fireEvent.click(screen.getByRole('button', { name: 'Pause autoplay' }));
-    expect(screen.getByRole('button', { name: 'Resume autoplay' })).toHaveAttribute('aria-pressed', 'true');
-    advanceAutoplay(12000);
-    expectActiveOpportunity(0);
-    fireEvent.click(screen.getByRole('button', { name: 'Resume autoplay' }));
-    expect(screen.getByRole('button', { name: 'Pause autoplay' })).toHaveAttribute('aria-pressed', 'false');
-    advanceAutoplay();
-    expectActiveOpportunity(1);
-  });
-
-  it('pauses for hover, focus within, hidden documents, and gestures, then cleans up cancellation', () => {
-    vi.useFakeTimers();
-    renderCarousel();
-    setStageInView(true);
-    const region = screen.getByRole('region', { name: 'Opportunities Showcase' });
-    const stage = screen.getByRole('group', { name: 'Browse opportunities' });
-
-    fireEvent.mouseEnter(region);
-    advanceAutoplay();
-    expectActiveOpportunity(0);
-    fireEvent.mouseLeave(region);
-    act(() => stage.focus());
-    advanceAutoplay();
-    expectActiveOpportunity(0);
-    act(() => stage.blur());
-    visibility = 'hidden';
-    fireEvent(document, new Event('visibilitychange'));
-    advanceAutoplay();
-    expectActiveOpportunity(0);
-    visibility = 'visible';
-    fireEvent(document, new Event('visibilitychange'));
-    fireEvent.pointerDown(stage, { pointerId: 1, clientX: 200, clientY: 100, button: 0 });
-    advanceAutoplay();
-    expectActiveOpportunity(0);
-    fireEvent.pointerCancel(stage, { pointerId: 1 });
-    advanceAutoplay();
-    expectActiveOpportunity(1);
-  });
-
-  it('disables autoplay and slide motion for reduced motion while keeping manual controls usable', () => {
-    vi.useFakeTimers();
-    setReducedMotion(true);
-    renderCarousel();
-    setStageInView(true);
     advanceAutoplay(18000);
     expectActiveOpportunity(0);
-    expect(screen.getByRole('button', { name: 'Resume autoplay' })).toBeDisabled();
+  });
+
+  it('renders without play and pause buttons', () => {
+    renderCarousel();
+    expect(screen.queryByRole('button', { name: /autoplay/i })).not.toBeInTheDocument();
+  });
+
+  it('disables slide motion for reduced motion while keeping manual controls usable', () => {
+    setReducedMotion(true);
+    renderCarousel();
     expect(expectActiveOpportunity(0)).toHaveStyle({ transition: 'none' });
 
     fireEvent.click(screen.getByRole('button', { name: 'Next slide' }));
     expectActiveOpportunity(1);
+    fireEvent.click(screen.getByRole('button', { name: 'Previous slide' }));
+    expectActiveOpportunity(0);
   });
 
   it('swipes horizontally in both directions and suppresses an accidental CTA click', () => {

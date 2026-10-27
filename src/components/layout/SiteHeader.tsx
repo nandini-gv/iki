@@ -16,7 +16,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { navItems } from '../../features/home/data/homeContent';
-import { IKI_COLORS } from '../../app/theme';
 
 const announcementMessages = [
   '🎯 10,000+ verified jobs available now',
@@ -31,21 +30,29 @@ function AnnouncementBar() {
   return (
     <Box
       sx={{
-        backgroundColor: IKI_COLORS.ink,
+        backgroundColor: '#070709',
         height: 28,
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
         position: 'relative',
         zIndex: 1210,
+        borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+        maskImage: 'linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)',
+        cursor: 'default',
+        '&:hover .announcement-ticker': {
+          animationPlayState: 'paused',
+        },
       }}
     >
       <Box
+        className="announcement-ticker"
         sx={{
           display: 'flex',
           alignItems: 'center',
           whiteSpace: 'nowrap',
-          animation: 'ticker 32s linear infinite',
+          animation: 'ticker 34s linear infinite',
           willChange: 'transform',
           gap: 0,
         }}
@@ -57,15 +64,19 @@ function AnnouncementBar() {
             sx={{
               display: 'inline-flex',
               alignItems: 'center',
-              px: 4,
-              fontSize: '0.8rem',
+              px: 3.5,
+              fontSize: '0.78rem',
               fontWeight: 500,
-              color: 'rgba(255,255,255,0.7)',
+              color: 'rgba(255,255,255,0.72)',
               letterSpacing: '0.01em',
+              transition: 'color 0.2s ease',
+              '&:hover': {
+                color: '#ffffff',
+              },
               '&::after': {
                 content: '"·"',
-                ml: 4,
-                color: 'rgba(255,255,255,0.25)',
+                ml: 3.5,
+                color: 'rgba(255,255,255,0.22)',
               },
             }}
           >
@@ -111,14 +122,14 @@ export function SiteHeader() {
         position="static"
         elevation={0}
         sx={{
-          backgroundColor: scrolled ? 'rgba(10, 10, 11, 0.78)' : 'transparent',
+          backgroundColor: scrolled ? 'rgba(8, 10, 14, 0.82)' : 'transparent',
           backgroundImage: 'none',
-          backdropFilter: scrolled ? 'blur(16px) saturate(180%)' : 'none',
-          WebkitBackdropFilter: scrolled ? 'blur(16px) saturate(180%)' : 'none',
-          boxShadow: scrolled ? '0 4px 20px rgba(0, 0, 0, 0.2)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.08)' : 'none',
+          backdropFilter: scrolled ? 'blur(20px) saturate(190%)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(20px) saturate(190%)' : 'none',
+          boxShadow: scrolled ? '0 10px 30px -10px rgba(0, 0, 0, 0.4)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid transparent',
           color: '#ffffff',
-          transition: 'background-color 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease',
+          transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
         <Container maxWidth="xl">
@@ -142,8 +153,8 @@ export function SiteHeader() {
                 alignItems: 'center',
                 textDecoration: 'none',
                 flexShrink: 0,
-                transition: 'opacity 0.2s ease',
-                '&:hover': { opacity: 0.85 },
+                transition: 'opacity 0.2s ease, transform 0.2s ease',
+                '&:hover': { opacity: 0.9, transform: 'scale(1.02)' },
               }}
             >
               <Box
@@ -154,6 +165,7 @@ export function SiteHeader() {
                   height: { xs: 26, md: 32 },
                   width: 'auto',
                   display: 'block',
+                  filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))',
                 }}
               />
             </Box>
@@ -165,7 +177,7 @@ export function SiteHeader() {
               sx={{
                 display: { xs: 'none', md: 'flex' },
                 alignItems: 'center',
-                gap: { md: 3.5, lg: 4.5 },
+                gap: { md: 1, lg: 1.5 },
                 flex: 1,
                 justifyContent: 'center',
               }}
@@ -182,27 +194,22 @@ export function SiteHeader() {
                     textDecoration: 'none',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: 0.4,
+                    gap: 0.5,
+                    px: 1.75,
+                    py: 0.75,
+                    borderRadius: 9999,
                     letterSpacing: '-0.01em',
-                    transition: 'color 0.2s ease',
+                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                     position: 'relative',
+                    '& svg': {
+                      transition: 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                    },
                     '&:hover': {
                       color: '#ffffff',
-                    },
-                    '&::after': {
-                      content: '""',
-                      position: 'absolute',
-                      bottom: -4,
-                      left: 0,
-                      right: 0,
-                      height: '1.5px',
-                      backgroundColor: 'rgba(255,255,255,0.7)',
-                      transform: 'scaleX(0)',
-                      transformOrigin: 'center',
-                      transition: 'transform 0.2s ease',
-                    },
-                    '&:hover::after': {
-                      transform: 'scaleX(1)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                      '& svg': {
+                        transform: 'rotate(180deg)',
+                      },
                     },
                   }}
                 >
@@ -232,6 +239,7 @@ export function SiteHeader() {
                   textTransform: 'none',
                   px: 2,
                   borderRadius: 9999,
+                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                   '&:hover': {
                     color: '#ffffff',
                     backgroundColor: 'rgba(255,255,255,0.08)',
@@ -243,20 +251,20 @@ export function SiteHeader() {
               <Button
                 variant="contained"
                 sx={{
-                  backgroundColor: '#ffffff',
-                  color: '#111111',
+                  background: 'linear-gradient(180deg, #ffffff 0%, #edf0f3 100%)',
+                  color: '#0a0a0b',
                   fontWeight: 600,
                   fontSize: '0.875rem',
                   textTransform: 'none',
                   px: 2.75,
                   py: 0.875,
                   borderRadius: 9999,
-                  boxShadow: 'none',
-                  transition: 'all 0.2s ease',
+                  boxShadow: '0 4px 14px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                   '&:hover': {
-                    backgroundColor: 'rgba(255,255,255,0.92)',
-                    transform: 'translateY(-1px)',
-                    boxShadow: '0 4px 16px rgba(255,255,255,0.2)',
+                    background: '#ffffff',
+                    transform: 'translateY(-1.5px)',
+                    boxShadow: '0 6px 20px rgba(255, 255, 255, 0.3), inset 0 1px 0 #ffffff',
                   },
                 }}
               >

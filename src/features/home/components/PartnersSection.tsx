@@ -98,13 +98,112 @@ function AppleLogo() {
   );
 }
 
-const PARTNER_LOGOS = [
-  { name: 'Microsoft', component: MicrosoftLogo },
-  { name: 'Google Cloud', component: GoogleCloudLogo },
-  { name: 'AWS', component: AwsLogo },
-  { name: 'Cisco', component: CiscoLogo },
-  { name: 'Apple', component: AppleLogo },
+interface PartnerItem {
+  name: string;
+  type: 'component' | 'image';
+  component?: React.ComponentType;
+  src?: string;
+  height?: { xs: number; sm: number; md: number };
+  maxWidth?: { xs: number; sm: number; md: number };
+}
+
+const ALL_PARTNER_LOGOS: PartnerItem[] = [
+  {
+    name: 'Standard Chartered',
+    type: 'image',
+    src: '/images/standard-chartered.svg',
+    height: { xs: 26, sm: 30, md: 32 },
+    maxWidth: { xs: 130, sm: 155, md: 170 },
+  },
+  { name: 'Microsoft', type: 'component', component: MicrosoftLogo },
+  {
+    name: 'Bank of America',
+    type: 'image',
+    src: '/images/bank-of-america.svg',
+    height: { xs: 20, sm: 22, md: 24 },
+    maxWidth: { xs: 180, sm: 210, md: 230 },
+  },
+  { name: 'Google Cloud', type: 'component', component: GoogleCloudLogo },
+  {
+    name: 'Siemens',
+    type: 'image',
+    src: '/images/siemens.svg',
+    height: { xs: 20, sm: 22, md: 24 },
+    maxWidth: { xs: 120, sm: 140, md: 150 },
+  },
+  { name: 'AWS', type: 'component', component: AwsLogo },
+  {
+    name: 'KPMG',
+    type: 'image',
+    src: '/images/kpmg.svg',
+    height: { xs: 24, sm: 28, md: 30 },
+    maxWidth: { xs: 90, sm: 105, md: 115 },
+  },
+  { name: 'Cisco', type: 'component', component: CiscoLogo },
+  {
+    name: 'PwC',
+    type: 'image',
+    src: '/images/pwc-clipped.svg',
+    height: { xs: 24, sm: 28, md: 30 },
+    maxWidth: { xs: 70, sm: 80, md: 90 },
+  },
+  {
+    name: 'Fidelity International',
+    type: 'image',
+    src: '/images/fidelity-international.svg',
+    height: { xs: 22, sm: 26, md: 28 },
+    maxWidth: { xs: 120, sm: 140, md: 150 },
+  },
+  {
+    name: 'CBRE',
+    type: 'image',
+    src: '/images/cbre.svg',
+    height: { xs: 22, sm: 26, md: 28 },
+    maxWidth: { xs: 95, sm: 110, md: 120 },
+  },
+  { name: 'Apple', type: 'component', component: AppleLogo },
 ];
+
+function PartnerLogoItem({ partner }: { partner: PartnerItem }) {
+  const LogoComp = partner.component;
+  return (
+    <Box
+      sx={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0,
+        px: { xs: 1.5, sm: 2.5, md: 3 },
+        py: 1,
+        opacity: 0.88,
+        transition: 'opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+        '&:hover': {
+          opacity: 1,
+          transform: 'scale(1.05)',
+        },
+      }}
+    >
+      {partner.type === 'component' && LogoComp ? (
+        <LogoComp />
+      ) : (
+        <Box
+          component="img"
+          src={partner.src}
+          alt={partner.name}
+          loading="eager"
+          decoding="async"
+          sx={{
+            height: partner.height,
+            maxWidth: partner.maxWidth,
+            width: 'auto',
+            objectFit: 'contain',
+            display: 'block',
+          }}
+        />
+      )}
+    </Box>
+  );
+}
 
 export function PartnersSection() {
   return (
@@ -114,10 +213,13 @@ export function PartnersSection() {
       aria-label="Innovation Partners"
       sx={{
         bgcolor: 'common.white',
+        backgroundImage: 'radial-gradient(ellipse at 50% 0%, rgba(0, 113, 227, 0.03) 0%, transparent 70%)',
         color: 'text.primary',
-        py: { xs: 5, md: 7 },
+        py: { xs: 5.5, md: 7.5 },
         borderBottom: '1px solid',
         borderColor: 'divider',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
       <Container maxWidth="xl">
@@ -129,7 +231,7 @@ export function PartnersSection() {
             justifyContent: 'space-between',
             alignItems: { xs: 'flex-start', sm: 'center' },
             gap: 2,
-            mb: { xs: 4, md: 6 },
+            mb: { xs: 4, md: 5.5 },
           }}
         >
           <Typography
@@ -140,31 +242,41 @@ export function PartnersSection() {
               fontWeight: 600,
               letterSpacing: '-0.025em',
               lineHeight: 1.2,
-              color: '#222222',
+              color: '#1a1a1a',
             }}
           >
             {partnerContent.title}
           </Typography>
           <Link
             href="#partners"
-            underline="hover"
+            underline="none"
             sx={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: 0.75,
+              gap: 0.85,
               color: '#0071e3',
-              fontSize: '0.9rem',
-              fontWeight: 500,
-              textDecoration: 'none',
-              '&:hover': { textDecoration: 'underline' },
+              fontSize: '0.925rem',
+              fontWeight: 600,
+              letterSpacing: '-0.01em',
+              py: 0.5,
+              transition: 'color 0.2s ease, opacity 0.2s ease',
+              '& .partner-arrow': {
+                transition: 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+              },
+              '&:hover': {
+                color: '#005bb5',
+                '& .partner-arrow': {
+                  transform: 'translateX(4px)',
+                },
+              },
             }}
           >
             Learn more about our partners
-            <EastIcon sx={{ fontSize: 16 }} />
+            <EastIcon className="partner-arrow" sx={{ fontSize: 16 }} />
           </Link>
         </Reveal>
 
-        {/* Brand icons continuous auto-scrolling slider */}
+        {/* Brand icons continuous seamless auto-scrolling slider */}
         <Reveal delay={0.08}>
           <Box
             sx={{
@@ -174,6 +286,7 @@ export function PartnersSection() {
               py: 2,
               maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
               WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+              touchAction: 'pan-y',
               '&:hover .partner-slider-track': {
                 animationPlayState: 'paused',
               },
@@ -183,12 +296,10 @@ export function PartnersSection() {
               className="partner-slider-track"
               sx={{
                 display: 'flex',
-                alignItems: 'center',
-                gap: { xs: 6, sm: 8, md: 10 },
                 width: 'max-content',
-                animation: 'partnerSliderTrack 26s linear infinite',
+                animation: 'partnerInfiniteMarquee 38s linear infinite',
                 willChange: 'transform',
-                '@keyframes partnerSliderTrack': {
+                '@keyframes partnerInfiniteMarquee': {
                   '0%': { transform: 'translateX(0)' },
                   '100%': { transform: 'translateX(-50%)' },
                 },
@@ -197,29 +308,35 @@ export function PartnersSection() {
                 },
               }}
             >
-              {[...PARTNER_LOGOS, ...PARTNER_LOGOS, ...PARTNER_LOGOS, ...PARTNER_LOGOS].map((partner, index) => {
-                const LogoComponent = partner.component;
-                return (
-                  <Box
-                    key={`${partner.name}-${index}`}
-                    sx={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                      px: { xs: 1.5, sm: 2.5 },
-                      opacity: 0.88,
-                      transition: 'transform 0.25s ease, opacity 0.25s ease',
-                      '&:hover': {
-                        transform: 'scale(1.06)',
-                        opacity: 1,
-                      },
-                    }}
-                  >
-                    <LogoComponent />
-                  </Box>
-                );
-              })}
+              {/* Set A */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: { xs: 4, sm: 6, md: 8 },
+                  pr: { xs: 4, sm: 6, md: 8 },
+                  flexShrink: 0,
+                }}
+              >
+                {ALL_PARTNER_LOGOS.map((partner, index) => (
+                  <PartnerLogoItem key={`set-a-${partner.name}-${index}`} partner={partner} />
+                ))}
+              </Box>
+
+              {/* Set B (Identical replica for seamless infinite loop) */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: { xs: 4, sm: 6, md: 8 },
+                  pr: { xs: 4, sm: 6, md: 8 },
+                  flexShrink: 0,
+                }}
+              >
+                {ALL_PARTNER_LOGOS.map((partner, index) => (
+                  <PartnerLogoItem key={`set-b-${partner.name}-${index}`} partner={partner} />
+                ))}
+              </Box>
             </Box>
           </Box>
         </Reveal>
