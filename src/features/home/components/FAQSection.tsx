@@ -1,28 +1,129 @@
-import React, { useState } from 'react';
+import { useId, useState } from 'react';
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Box,
-  Chip,
+  ButtonBase,
+  Collapse,
   Container,
-  Grid,
-  Stack,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { faqCategories, faqData, type FaqCategory } from '../data/homeContent';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { Reveal } from '../../../components/common/Reveal';
+import {
+  faqContent,
+  faqDataByTopic,
+  faqTopics,
+  type FaqTopic,
+} from '../data/homeContent';
+
+function FaqRow({
+  q,
+  a,
+  id,
+  isOpen,
+  onToggle,
+  reducedMotion,
+}: {
+  q: string;
+  a: string;
+  id: string;
+  isOpen: boolean;
+  onToggle: () => void;
+  reducedMotion: boolean;
+}) {
+  return (
+    <Box sx={{ borderBottom: '1px solid', borderColor: 'divider', overflow: 'hidden' }}>
+      <Box component="h3" sx={{ m: 0 }}>
+        <ButtonBase
+          type="button"
+          disableRipple
+          onClick={onToggle}
+          aria-expanded={isOpen}
+          aria-controls={`${id}-panel`}
+          id={`${id}-question`}
+          sx={{
+            width: '100%',
+            minHeight: { xs: 58, md: 68 },
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 2,
+            py: { xs: 2, md: 2.25 },
+            textAlign: 'left',
+            borderRadius: 0,
+            color: 'text.primary',
+            transition: reducedMotion ? 'none' : 'color 0.2s ease',
+            '&:hover': { color: 'primary.main' },
+            '&.Mui-focusVisible': {
+              outline: '2px solid',
+              outlineColor: 'primary.main',
+              outlineOffset: -2,
+            },
+          }}
+        >
+          <Typography
+            component="span"
+            sx={{
+              fontSize: { xs: '1rem', md: '1.0625rem' },
+              fontWeight: 500,
+              lineHeight: 1.45,
+              letterSpacing: '-0.01em',
+              color: 'inherit',
+            }}
+          >
+            {q}
+          </Typography>
+          <KeyboardArrowDownIcon
+            sx={{
+              fontSize: 24,
+              flexShrink: 0,
+              color: 'text.secondary',
+              transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: reducedMotion ? 'none' : 'transform 260ms cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+          />
+        </ButtonBase>
+      </Box>
+      <Collapse
+        in={isOpen}
+        timeout={reducedMotion ? 0 : 260}
+        id={`${id}-panel`}
+        role="region"
+        aria-labelledby={`${id}-question`}
+        aria-hidden={!isOpen}
+        sx={{
+          overflow: 'hidden',
+          ...(!isOpen && { visibility: 'hidden', height: 0 }),
+        }}
+      >
+        <Box sx={{ pb: 3.5, pt: 0.5, pr: { xs: 2, md: 6 } }}>
+          <Typography
+            sx={{
+              m: 0,
+              fontSize: { xs: '0.9375rem', md: '1rem' },
+              color: 'text.secondary',
+              lineHeight: 1.65,
+            }}
+          >
+            {a}
+          </Typography>
+        </Box>
+      </Collapse>
+    </Box>
+  );
+}
 
 export function FAQSection() {
-  const [selectedCategory, setSelectedCategory] = useState<FaqCategory>('Job Seekers');
-  const [expanded, setExpanded] = useState<string | false>('faq-0');
+  const [selectedTopic, setSelectedTopic] = useState<FaqTopic>(faqContent.defaultTopic);
+  const [openIndex, setOpenIndex] = useState(-1);
+  const instanceId = useId();
+  const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+  const topicId = selectedTopic.toLowerCase().replace(/\s+/g, '-');
 
-  const handleAccordionChange =
-    (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
-      setExpanded(isExpanded ? panel : false);
-    };
-
-  const currentQuestions = faqData[selectedCategory] ?? [];
+  const handleTopicChange = (topic: FaqTopic) => {
+    setSelectedTopic(topic);
+    setOpenIndex(-1);
+  };
 
   return (
     <Box
@@ -30,152 +131,138 @@ export function FAQSection() {
       component="section"
       aria-label="Frequently Asked Questions"
       sx={{
-        backgroundColor: '#000000',
-        py: { xs: 8, md: 12 },
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        bgcolor: 'common.white',
+        color: 'text.primary',
+        py: { xs: 6, md: 9 },
+        borderTop: '1px solid',
+        borderColor: 'divider',
       }}
     >
       <Container maxWidth="xl">
-        <Grid container spacing={{ xs: 5, md: 8 }}>
-          {/* Left Column: Heading and Category Filter */}
-          <Grid item xs={12} md={4}>
-            <Box sx={{ position: { md: 'sticky' }, top: { md: 100 } }}>
-              <Typography
-                variant="overline"
-                sx={{
-                  color: '#47a3ff',
-                  fontWeight: 700,
-                  fontSize: '0.8125rem',
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  mb: 1,
-                  display: 'block',
-                }}
-              >
-                FAQS
-              </Typography>
-              <Typography
-                variant="h3"
-                sx={{
-                  color: '#ffffff',
-                  fontSize: { xs: '1.85rem', sm: '2.25rem', md: '2.5rem' },
-                  fontWeight: 700,
-                  letterSpacing: '-0.02em',
-                  lineHeight: 1.2,
-                  mb: 2,
-                }}
-              >
-                Answers to questions about
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: 'rgba(255, 255, 255, 0.7)',
-                  fontSize: '0.9375rem',
-                  lineHeight: 1.6,
-                  mb: 3.5,
-                }}
-              >
-                Select a category to view answers tailored to your needs.
-              </Typography>
-
-              {/* Category Filter Chips / Buttons */}
-              <Stack direction="row" flexWrap="wrap" gap={1}>
-                {faqCategories.map((category) => {
-                  const isSelected = selectedCategory === category;
-                  return (
-                    <Chip
-                      key={category}
-                      label={category}
-                      onClick={() => {
-                        setSelectedCategory(category);
-                        setExpanded('faq-0');
-                      }}
-                      sx={{
-                        backgroundColor: isSelected ? '#0071e3' : 'rgba(255, 255, 255, 0.08)',
-                        color: isSelected ? '#ffffff' : 'rgba(255, 255, 255, 0.8)',
-                        fontWeight: 600,
-                        fontSize: '0.8125rem',
-                        py: 2,
-                        px: 1,
-                        borderRadius: 9999,
-                        border: '1px solid',
-                        borderColor: isSelected ? '#0071e3' : 'rgba(255, 255, 255, 0.12)',
-                        '&:hover': {
-                          backgroundColor: isSelected ? '#0077ed' : 'rgba(255, 255, 255, 0.16)',
-                        },
-                      }}
-                    />
-                  );
-                })}
-              </Stack>
-            </Box>
-          </Grid>
-
-          {/* Right Column: Accordion List */}
-          <Grid item xs={12} md={8}>
-            <Box>
-              {currentQuestions.map((item, index) => {
-                const panelId = `faq-${index}`;
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: {
+              xs: 'minmax(0, 1fr)',
+              md: 'minmax(0, 320px) minmax(0, 1fr)',
+              lg: 'minmax(0, 360px) minmax(0, 1fr)',
+            },
+            gap: { xs: 4, md: 6, lg: 8 },
+            alignItems: 'start',
+          }}
+        >
+          {/* Left Column: Heading, Static Blue IKI, and Category Navigation */}
+          <Reveal>
+            <Typography
+              component="h2"
+              sx={{
+                fontSize: 'clamp(1.75rem, 2.5vw, 2.25rem)',
+                fontWeight: 500,
+                lineHeight: 1.15,
+                letterSpacing: '-0.02em',
+                color: 'text.primary',
+                m: 0,
+              }}
+            >
+              {faqContent.headingPrefix}
+            </Typography>
+            <Typography
+              component="span"
+              sx={{
+                display: 'block',
+                fontSize: 'clamp(1.75rem, 2.5vw, 2.25rem)',
+                fontWeight: 600,
+                lineHeight: 1.2,
+                letterSpacing: '-0.02em',
+                color: 'primary.main',
+                mt: 0.25,
+                mb: { xs: 3, md: 4 },
+              }}
+            >
+              IKI
+            </Typography>
+            <Box
+              role="group"
+              aria-label="FAQ topics"
+              sx={{
+                display: 'flex',
+                flexDirection: { xs: 'row', md: 'column' },
+                flexWrap: { xs: 'wrap', md: 'nowrap' },
+                gap: { xs: 1, md: 0.5 },
+              }}
+            >
+              {faqTopics.map((topic) => {
+                const active = topic === selectedTopic;
+                const label = topic === 'IKI' ? 'About IKI' : topic;
                 return (
-                  <Accordion
-                    key={item.q}
-                    expanded={expanded === panelId}
-                    onChange={handleAccordionChange(panelId)}
-                    disableGutters
-                    elevation={0}
+                  <ButtonBase
+                    key={topic}
+                    type="button"
+                    disableRipple
+                    aria-pressed={active}
+                    onClick={() => handleTopicChange(topic)}
                     sx={{
-                      backgroundColor: 'transparent',
-                      color: '#ffffff',
-                      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-                      '&:before': { display: 'none' },
-                      transition: 'all 0.2s ease',
+                      justifyContent: 'flex-start',
+                      minHeight: 44,
+                      width: { xs: 'auto', md: '100%' },
+                      // Blue vertical indicator ONLY on active category; NO vertical border on inactive categories
+                      borderLeft: {
+                        xs: 'none',
+                        md: active ? '3px solid' : 'none',
+                      },
+                      borderBottom: {
+                        xs: active ? '2.5px solid' : 'none',
+                        md: 'none',
+                      },
+                      borderColor: active ? 'primary.main' : 'transparent',
+                      // Precise padding so text alignment never shifts between active and inactive states
+                      pl: {
+                        xs: 1.75,
+                        md: active ? 2 : '19px',
+                      },
+                      pr: { xs: 1.75, md: 2 },
+                      py: { xs: 1, md: 1.25 },
+                      borderRadius: 0,
+                      textAlign: 'left',
+                      fontSize: '1rem',
+                      fontWeight: active ? 600 : 400,
+                      color: active ? 'text.primary' : 'text.secondary',
+                      transition: reducedMotion
+                        ? 'none'
+                        : 'color 0.2s ease, background-color 0.2s ease',
+                      '&:hover': {
+                        bgcolor: 'action.hover',
+                        color: 'text.primary',
+                      },
+                      '&.Mui-focusVisible': {
+                        outline: '2px solid',
+                        outlineColor: 'primary.main',
+                        outlineOffset: -2,
+                      },
                     }}
                   >
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />}
-                      aria-controls={`${panelId}-content`}
-                      id={`${panelId}-header`}
-                      sx={{
-                        px: 0,
-                        py: 2,
-                        '&:hover': {
-                          '& .MuiTypography-root': {
-                            color: '#47a3ff',
-                          },
-                        },
-                      }}
-                    >
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          fontSize: { xs: '1.05rem', sm: '1.2rem' },
-                          fontWeight: 600,
-                          color: '#ffffff',
-                          transition: 'color 0.2s ease',
-                        }}
-                      >
-                        {item.q}
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails sx={{ px: 0, pb: 3, pt: 0 }}>
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          color: 'rgba(255, 255, 255, 0.75)',
-                          fontSize: '1rem',
-                          lineHeight: 1.65,
-                        }}
-                      >
-                        {item.a}
-                      </Typography>
-                    </AccordionDetails>
-                  </Accordion>
+                    {label}
+                  </ButtonBase>
                 );
               })}
             </Box>
-          </Grid>
-        </Grid>
+          </Reveal>
+
+          {/* Right Column: Full-Width Accordion Rows */}
+          <Reveal delay={0.08} sx={{ minWidth: 0, borderTop: '1px solid', borderColor: 'divider' }}>
+            {faqDataByTopic[selectedTopic].map((item, index) => (
+              <FaqRow
+                key={`${topicId}-${index}`}
+                q={item.q}
+                a={item.a}
+                id={`faq-${instanceId}-${topicId}-${index}`}
+                isOpen={openIndex === index}
+                onToggle={() => setOpenIndex((current) => (current === index ? -1 : index))}
+                reducedMotion={reducedMotion}
+              />
+            ))}
+          </Reveal>
+        </Box>
       </Container>
     </Box>
   );

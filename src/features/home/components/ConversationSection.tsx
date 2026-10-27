@@ -1,15 +1,7 @@
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Grid,
-  Stack,
-  Typography,
-} from '@mui/material';
-import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import { FONT_STACK_SERIF } from '../../../app/theme';
+import { Box, Button, Container, Link, Typography } from '@mui/material';
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import { Reveal } from '../../../components/common/Reveal';
 import { conversationContent } from '../data/homeContent';
 
 export function ConversationSection() {
@@ -17,131 +9,130 @@ export function ConversationSection() {
     <Box
       id="conversations"
       component="section"
-      aria-label="Meaningful Conversations"
+      aria-label="Start a Conversation"
       sx={{
-        backgroundColor: '#FAF9EE', // Pale cream accent as approved in mockup image (9).png
-        color: '#1d1d1f',
-        py: { xs: 9, md: 13 },
+        bgcolor: 'common.white',
+        color: 'text.primary',
+        py: { xs: 4.5, md: 6 },
+        borderTop: '1px solid',
+        borderColor: 'divider',
       }}
     >
       <Container maxWidth="xl">
-        <Grid container spacing={{ xs: 5, md: 8 }} alignItems="center">
-          {/* Left Column: Heading and Eyebrow */}
-          <Grid item xs={12} md={5}>
-            <Box>
-              <Typography
-                variant="overline"
-                sx={{
-                  color: '#5c4d37',
-                  fontWeight: 700,
-                  fontSize: '0.8125rem',
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  borderBottom: '2px solid #5c4d37',
-                  display: 'inline-block',
-                  pb: 0.25,
-                  mb: 2.5,
-                }}
-              >
-                {conversationContent.eyebrow}
-              </Typography>
-              <Typography
-                variant="h2"
-                component="h2"
-                sx={{
-                  fontFamily: FONT_STACK_SERIF,
-                  fontSize: { xs: '2.25rem', sm: '2.85rem', md: '3.4rem' },
-                  fontWeight: 500,
-                  lineHeight: 1.15,
-                  letterSpacing: '-0.015em',
-                  color: '#2a1e12',
-                }}
-              >
-                {conversationContent.heading}
-              </Typography>
-            </Box>
-          </Grid>
-
-          {/* Vertical Divider for Desktop */}
-          <Grid
-            item
-            xs={12}
-            md={1}
-            sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'minmax(0, 2fr) minmax(0, 3fr)' },
+            gap: { xs: 2.5, md: 4, lg: 6 },
+            alignItems: 'stretch',
+          }}
+        >
+          <Reveal sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <Typography
+              sx={{
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                color: 'text.secondary',
+                letterSpacing: '0.08em',
+                mb: 1,
+              }}
+            >
+              {conversationContent.eyebrow}
+            </Typography>
+            <Typography
+              component="h2"
+              sx={{
+                maxWidth: 420,
+                fontSize: 'clamp(1.625rem, 2.7vw, 2.25rem)',
+                fontWeight: 600,
+                lineHeight: 1.18,
+                letterSpacing: '-0.025em',
+              }}
+            >
+              {conversationContent.heading}
+            </Typography>
+          </Reveal>
+          <Reveal
+            delay={0.08}
+            sx={{
+              minWidth: 0,
+              pl: { md: 4, lg: 6 },
+              borderLeft: { md: '1px solid' },
+              borderColor: { md: 'divider' },
+            }}
           >
-            <Divider
-              orientation="vertical"
-              flexItem
-              sx={{ borderColor: 'rgba(42, 30, 18, 0.2)', height: 180 }}
-            />
-          </Grid>
-
-          {/* Right Column: Message, Subtext, and CTA */}
-          <Grid item xs={12} md={6}>
-            <Box sx={{ maxWidth: 540 }}>
-              <Typography
-                variant="body1"
-                sx={{
-                  fontSize: { xs: '1.05rem', md: '1.1875rem' },
-                  lineHeight: 1.65,
-                  color: '#3d3023',
-                  mb: 3.5,
-                  fontWeight: 400,
-                }}
-              >
-                {conversationContent.bodyText}
-              </Typography>
-
-              <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 4 }}>
-                <Box
-                  sx={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: '50%',
-                    bgcolor: 'rgba(92, 77, 55, 0.12)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#3d3023',
-                    flexShrink: 0,
-                  }}
-                >
-                  <ForumOutlinedIcon />
-                </Box>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontSize: '1rem',
-                    color: '#3d3023',
-                    fontWeight: 500,
-                  }}
-                >
-                  {conversationContent.subText}
-                </Typography>
-              </Stack>
-
+            <Typography sx={{ fontSize: '1rem', lineHeight: 1.6, mb: 1.25 }}>
+              {conversationContent.bodyText}
+            </Typography>
+            <Typography sx={{ fontSize: '0.875rem', lineHeight: 1.5, color: 'text.secondary', mb: 2 }}>
+              {conversationContent.subText}
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 1.25, flexWrap: 'wrap' }}>
               <Button
                 variant="contained"
                 href={`mailto:${conversationContent.email}`}
-                startIcon={<MailOutlineIcon />}
+                startIcon={<EmailOutlinedIcon sx={{ fontSize: 18 }} />}
                 sx={{
-                  backgroundColor: '#1d1d1f',
-                  color: '#ffffff',
-                  borderRadius: 9999,
-                  px: 4,
-                  py: 1.25,
-                  fontSize: '0.9375rem',
-                  fontWeight: 600,
-                  '&:hover': {
-                    backgroundColor: '#000000',
-                  },
+                  minHeight: 44,
+                  borderRadius: 0,
+                  px: 2.5,
+                  py: 1,
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  boxShadow: 'none',
+                  '&:hover': { boxShadow: 'none', transform: 'none' },
                 }}
               >
-                {conversationContent.cta}
+                {conversationContent.ctaText}
+              </Button>
+              <Button
+                variant="outlined"
+                href="#"
+                endIcon={<ArrowOutwardIcon sx={{ fontSize: 16 }} />}
+                sx={{
+                  minHeight: 44,
+                  color: 'text.primary',
+                  borderColor: 'divider',
+                  borderRadius: 0,
+                  px: 2.5,
+                  py: 1,
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  '&:hover': { borderColor: 'text.secondary', bgcolor: 'action.hover', transform: 'none' },
+                }}
+              >
+                Book a Demo
               </Button>
             </Box>
-          </Grid>
-        </Grid>
+            <Box
+              component="dl"
+              sx={{ m: 0, mt: 2, display: 'flex', columnGap: { xs: 3, sm: 4 }, rowGap: 1.5, flexWrap: 'wrap' }}
+            >
+              <Box sx={{ minWidth: 0 }}>
+                <Typography component="dt" sx={{ fontSize: '0.75rem', color: 'text.secondary', mb: 0.25 }}>
+                  Email
+                </Typography>
+                <Box component="dd" sx={{ m: 0 }}>
+                  <Link
+                    href={`mailto:${conversationContent.email}`}
+                    underline="hover"
+                    sx={{ fontSize: '0.875rem', color: 'text.primary', overflowWrap: 'anywhere' }}
+                  >
+                    {conversationContent.email}
+                  </Link>
+                </Box>
+              </Box>
+              <Box>
+                <Typography component="dt" sx={{ fontSize: '0.75rem', color: 'text.secondary', mb: 0.25 }}>
+                  Response Time
+                </Typography>
+                <Typography component="dd" sx={{ m: 0, fontSize: '0.875rem' }}>
+                  Within 2 hours
+                </Typography>
+              </Box>
+            </Box>
+          </Reveal>
+        </Box>
       </Container>
     </Box>
   );

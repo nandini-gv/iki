@@ -5,7 +5,14 @@ import App from '../app/App';
 describe('App Root', () => {
   it('renders the application with complete homepage structure', () => {
     render(<App />);
-    expect(screen.getByRole('heading', { name: /We Connect Talent to Opportunity/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /Real Opportunities\. Real Growth\./i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /We Connect Talent to Opportunity/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /Trusted by our innovation partners/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /We Believe In Meaningful Conversations/i })
+    ).toBeInTheDocument();
   });
 });

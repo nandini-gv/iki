@@ -18,28 +18,51 @@ export const FONT_STACK_SERIF = [
   'serif',
 ].join(', ');
 
+// Design tokens
+export const IKI_COLORS = {
+  ink: '#0A0A0B',
+  inkLight: '#1A1A1C',
+  inkMid: '#2C2C2E',
+  slate: '#3A3A3C',
+  mist: '#636366',
+  silver: '#8E8E93',
+  cloud: '#C7C7CC',
+  smoke: '#E5E5EA',
+  snow: '#F2F2F7',
+  white: '#FFFFFF',
+  blue: '#0066CC',
+  blueDark: '#004FA3',
+  blueLight: '#3B9EFF',
+  accent: '#0071e3',
+  accentHover: '#0077ED',
+  cream: '#FAF9EE',
+  creamDark: '#F0EDD8',
+  navy: '#0D1B2A',
+  navyLight: '#1A2F45',
+};
+
 let theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#0071e3',
-      light: '#47a3ff',
-      dark: '#0051a8',
-      contrastText: '#ffffff',
+      main: IKI_COLORS.accent,
+      light: IKI_COLORS.blueLight,
+      dark: IKI_COLORS.blueDark,
+      contrastText: IKI_COLORS.white,
     },
     secondary: {
-      main: '#1d1d1f',
-      light: '#424245',
-      dark: '#000000',
-      contrastText: '#ffffff',
+      main: IKI_COLORS.inkLight,
+      light: IKI_COLORS.slate,
+      dark: IKI_COLORS.ink,
+      contrastText: IKI_COLORS.white,
     },
     background: {
-      default: '#ffffff',
-      paper: '#f5f5f7',
+      default: IKI_COLORS.white,
+      paper: IKI_COLORS.snow,
     },
     text: {
-      primary: '#1d1d1f',
-      secondary: '#86868b',
+      primary: IKI_COLORS.inkLight,
+      secondary: IKI_COLORS.mist,
     },
     divider: 'rgba(0, 0, 0, 0.08)',
   },
@@ -47,22 +70,22 @@ let theme = createTheme({
     fontFamily: FONT_STACK_SANS,
     h1: {
       fontWeight: 600,
-      letterSpacing: '-0.015em',
-      lineHeight: 1.1,
+      letterSpacing: '-0.02em',
+      lineHeight: 1.08,
     },
     h2: {
       fontWeight: 600,
-      letterSpacing: '-0.01em',
-      lineHeight: 1.2,
+      letterSpacing: '-0.015em',
+      lineHeight: 1.15,
     },
     h3: {
       fontWeight: 600,
-      letterSpacing: '-0.005em',
-      lineHeight: 1.25,
+      letterSpacing: '-0.01em',
+      lineHeight: 1.22,
     },
     h4: {
       fontWeight: 600,
-      letterSpacing: '0em',
+      letterSpacing: '-0.005em',
       lineHeight: 1.3,
     },
     h5: {
@@ -74,13 +97,13 @@ let theme = createTheme({
       lineHeight: 1.4,
     },
     body1: {
-      fontSize: '1.0625rem', // 17px Apple body standard
-      lineHeight: 1.47,
-      letterSpacing: '-0.022em',
+      fontSize: '1.0625rem',
+      lineHeight: 1.55,
+      letterSpacing: '-0.01em',
     },
     body2: {
-      fontSize: '0.875rem', // 14px
-      lineHeight: 1.43,
+      fontSize: '0.875rem',
+      lineHeight: 1.5,
     },
     button: {
       textTransform: 'none',
@@ -94,11 +117,54 @@ let theme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: {
+        '@keyframes ticker': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        '@keyframes fadeInUp': {
+          '0%': { opacity: 0, transform: 'translateY(24px)' },
+          '100%': { opacity: 1, transform: 'translateY(0)' },
+        },
+        '@keyframes fadeIn': {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
+        },
+        '@keyframes scaleIn': {
+          '0%': { opacity: 0, transform: 'scale(0.92)' },
+          '100%': { opacity: 1, transform: 'scale(1)' },
+        },
+        '@keyframes slideInLeft': {
+          '0%': { opacity: 0, transform: 'translateX(-32px)' },
+          '100%': { opacity: 1, transform: 'translateX(0)' },
+        },
+        '@keyframes slideInRight': {
+          '0%': { opacity: 0, transform: 'translateX(32px)' },
+          '100%': { opacity: 1, transform: 'translateX(0)' },
+        },
+        '@keyframes pulseGlow': {
+          '0%, 100%': { boxShadow: '0 0 0 0 rgba(0, 113, 227, 0)' },
+          '50%': { boxShadow: '0 0 0 8px rgba(0, 113, 227, 0.12)' },
+        },
+        '*, *::before, *::after': {
+          boxSizing: 'border-box',
+        },
+        html: {
+          scrollBehavior: 'smooth',
+        },
         body: {
           WebkitFontSmoothing: 'antialiased',
           MozOsxFontSmoothing: 'grayscale',
-          backgroundColor: '#ffffff',
-          color: '#1d1d1f',
+          backgroundColor: IKI_COLORS.ink,
+          color: IKI_COLORS.inkLight,
+          overflowX: 'hidden',
+        },
+        '::selection': {
+          backgroundColor: 'rgba(0, 113, 227, 0.2)',
+          color: IKI_COLORS.inkLight,
+        },
+        ':focus-visible': {
+          outline: `2px solid ${IKI_COLORS.accent}`,
+          outlineOffset: '3px',
         },
       },
     },
@@ -108,15 +174,35 @@ let theme = createTheme({
       },
       styleOverrides: {
         root: {
-          borderRadius: 9999, // Pill shape inspired by Apple and mockup buttons
-          padding: '8px 20px',
+          borderRadius: 9999,
+          padding: '10px 24px',
           fontSize: '0.9375rem',
-          transition: 'all 0.2s ease-in-out',
+          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+          fontWeight: 500,
         },
         containedPrimary: {
-          backgroundColor: '#0071e3',
+          backgroundColor: IKI_COLORS.accent,
           '&:hover': {
-            backgroundColor: '#0077ed',
+            backgroundColor: IKI_COLORS.accentHover,
+            transform: 'translateY(-1px)',
+            boxShadow: '0 4px 16px rgba(0, 113, 227, 0.35)',
+          },
+          '&:active': {
+            transform: 'translateY(0)',
+          },
+        },
+        outlined: {
+          '&:hover': {
+            transform: 'translateY(-1px)',
+          },
+        },
+      },
+    },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          '&:before': {
+            display: 'none',
           },
         },
       },

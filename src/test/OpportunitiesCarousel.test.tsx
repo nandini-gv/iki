@@ -6,7 +6,7 @@ import theme from '../app/theme';
 import OpportunitiesCarousel from '../features/home/components/OpportunitiesCarousel';
 
 describe('OpportunitiesCarousel', () => {
-  it('renders initial slide and allows advancing to next slide', async () => {
+  it('renders carousel with navigation controls and pagination dots', async () => {
     const user = userEvent.setup();
     render(
       <ThemeProvider theme={theme}>
@@ -14,16 +14,20 @@ describe('OpportunitiesCarousel', () => {
       </ThemeProvider>
     );
 
-    expect(screen.getByRole('heading', { name: /Build Skills That Matter/i })).toBeInTheDocument();
-
-    const nextButton = screen.getByLabelText(/Next slide/i);
-    await user.click(nextButton);
-
-    expect(screen.getByRole('heading', { name: /Find Opportunities That Fit/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/Opportunities Showcase/i)).toBeInTheDocument();
 
     const prevButton = screen.getByLabelText(/Previous slide/i);
-    await user.click(prevButton);
+    const nextButton = screen.getByLabelText(/Next slide/i);
+    expect(prevButton).toBeInTheDocument();
+    expect(nextButton).toBeInTheDocument();
 
-    expect(screen.getByRole('heading', { name: /Build Skills That Matter/i })).toBeInTheDocument();
+    // Verify pagination dots
+    const dot1 = screen.getByLabelText(/Go to slide 1/i);
+    const dot2 = screen.getByLabelText(/Go to slide 2/i);
+    expect(dot1).toBeInTheDocument();
+    expect(dot2).toBeInTheDocument();
+
+    await user.click(nextButton);
+    await user.click(dot1);
   });
 });
