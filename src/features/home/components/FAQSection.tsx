@@ -136,7 +136,7 @@ function FaqRow({
 export function FAQSection() {
   const [selectedTopic, setSelectedTopic] = useState<FaqTopic>(faqContent.defaultTopic);
   const [openIndex, setOpenIndex] = useState(-1);
-  const [isCategoryOpen, setIsCategoryOpen] = useState(true);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const instanceId = useId();
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const topicId = selectedTopic.toLowerCase().replace(/\s+/g, '-');

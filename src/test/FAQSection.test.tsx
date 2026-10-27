@@ -76,6 +76,7 @@ describe('FAQSection', () => {
   it('switches category, resets expansion, and keeps stable topic-specific panel IDs', async () => {
     const user = userEvent.setup();
     renderFAQ();
+    await user.click(screen.getByRole('button', { name: 'Toggle FAQ categories' }));
     const categories = screen.getByRole('group', { name: 'FAQ topics' });
     const firstQuestion = screen.getByRole('button', { name: 'What is IKI?' });
     const initialPanelId = firstQuestion.getAttribute('aria-controls');
@@ -101,9 +102,15 @@ describe('FAQSection', () => {
     expect(restoredQuestion).toHaveAttribute('aria-controls', initialPanelId);
   });
 
-  it('permanently displays categories and updates the active category and questions', async () => {
+  it('keeps category accordion closed by default and opens only on click', async () => {
     const user = userEvent.setup();
     renderFAQ();
+    const toggleBtn = screen.getByRole('button', { name: 'Toggle FAQ categories' });
+    expect(toggleBtn).toHaveAttribute('aria-expanded', 'false');
+
+    await user.click(toggleBtn);
+    expect(toggleBtn).toHaveAttribute('aria-expanded', 'true');
+
     const categories = screen.getByRole('group', { name: 'FAQ topics' });
     const aboutButton = within(categories).getByRole('button', { name: 'About IKI' });
     const employersButton = within(categories).getByRole('button', { name: 'Employers' });
@@ -125,7 +132,10 @@ describe('FAQSection', () => {
     const user = userEvent.setup();
     renderFAQ();
     await user.tab();
-    expect(screen.getByRole('button', { name: 'Toggle FAQ categories' })).toHaveFocus();
+    const toggleBtn = screen.getByRole('button', { name: 'Toggle FAQ categories' });
+    expect(toggleBtn).toHaveFocus();
+    await user.keyboard('{Enter}');
+    expect(toggleBtn).toHaveAttribute('aria-expanded', 'true');
     await user.tab();
     expect(screen.getByRole('button', { name: 'About IKI' })).toHaveFocus();
     await user.tab();
@@ -150,6 +160,7 @@ describe('FAQSection', () => {
     setMediaQueries({ desktop: false });
     const user = userEvent.setup();
     renderFAQ();
+    await user.click(screen.getByRole('button', { name: 'Toggle FAQ categories' }));
     const categories = screen.getByRole('group', { name: 'FAQ topics' });
     expect(categories).toBeInTheDocument();
     expect(within(categories).getAllByRole('button')).toHaveLength(faqTopics.length);
@@ -163,6 +174,7 @@ describe('FAQSection', () => {
   it('repeatedly handles category switching and accordion expansion/collapse cycles', async () => {
     const user = userEvent.setup();
     renderFAQ();
+    await user.click(screen.getByRole('button', { name: 'Toggle FAQ categories' }));
     const categories = screen.getByRole('group', { name: 'FAQ topics' });
     const aboutBtn = within(categories).getByRole('button', { name: 'About IKI' });
     const jobSeekersBtn = within(categories).getByRole('button', { name: 'Job Seekers' });
@@ -217,6 +229,7 @@ describe('FAQSection', () => {
     setMediaQueries({ reducedMotion: true });
     const user = userEvent.setup();
     renderFAQ();
+    await user.click(screen.getByRole('button', { name: 'Toggle FAQ categories' }));
     const categories = screen.getByRole('group', { name: 'FAQ topics' });
     const label = topic === 'IKI' ? 'About IKI' : topic;
     await user.click(within(categories).getByRole('button', { name: label }));

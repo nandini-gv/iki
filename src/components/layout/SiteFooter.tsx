@@ -183,8 +183,8 @@ export function SiteFooter() {
                 sx={{
                   fontWeight: 600,
                   fontSize: '0.75rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
+                  textTransform: 'capitalize',
+                  letterSpacing: 'normal',
                   lineHeight: 1.5,
                   mb: 2,
                   color: '#ffffff',
