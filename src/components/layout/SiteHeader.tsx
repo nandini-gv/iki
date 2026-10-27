@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   AppBar,
   Box,
@@ -11,7 +11,6 @@ import {
   ListItemButton,
   ListItemText,
   Toolbar,
-  Typography,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
@@ -37,6 +36,8 @@ function AnnouncementBar() {
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
+        position: 'relative',
+        zIndex: 1210,
       }}
     >
       <Box
@@ -78,36 +79,28 @@ function AnnouncementBar() {
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
 
   return (
-    <>
+    <Box sx={{ width: '100%', position: 'relative', zIndex: 1200 }}>
+      {/* Announcement Bar */}
       <AnnouncementBar />
+
+      {/* Transparent Sticky Navigation Bar */}
       <AppBar
         position="sticky"
         elevation={0}
         sx={{
           top: 0,
-          backgroundColor: scrolled
-            ? 'rgba(10, 10, 11, 0.88)'
-            : 'transparent',
-          backdropFilter: scrolled ? 'blur(20px) saturate(180%)' : 'none',
-          WebkitBackdropFilter: scrolled ? 'blur(20px) saturate(180%)' : 'none',
-          boxShadow: scrolled
-            ? '0 1px 0 rgba(255,255,255,0.08), 0 8px 32px rgba(0,0,0,0.4)'
-            : 'none',
+          backgroundColor: 'transparent',
+          backgroundImage: 'none',
+          backdropFilter: 'none',
+          WebkitBackdropFilter: 'none',
+          boxShadow: 'none',
           borderBottom: 'none',
-          transition: 'all 0.3s cubic-bezier(0.4,0,0.2,1)',
-          zIndex: 1200,
           color: '#ffffff',
+          zIndex: 1200,
         }}
         component="header"
       >
@@ -115,32 +108,38 @@ export function SiteHeader() {
           <Toolbar
             disableGutters
             sx={{
-              minHeight: { xs: 56, md: 60 },
+              minHeight: { xs: 60, md: 72 },
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
               gap: 2,
             }}
           >
-            {/* Logo */}
-            <Typography
-              variant="h5"
+            {/* Logo with IKI Serif */}
+            <Box
               component="a"
               href="#"
-              aria-label="IKI — Career Platform home"
+              aria-label="IKI"
               sx={{
-                fontWeight: 800,
-                letterSpacing: '-0.04em',
-                fontSize: { xs: '1.4rem', md: '1.6rem' },
-                color: '#ffffff',
+                display: 'inline-flex',
+                alignItems: 'center',
                 textDecoration: 'none',
                 flexShrink: 0,
+                transition: 'opacity 0.2s ease',
                 '&:hover': { opacity: 0.85 },
-                transition: 'opacity 0.2s',
               }}
             >
-              IKI
-            </Typography>
+              <Box
+                component="img"
+                src="/images/iki-serif-white.png"
+                alt="IKI"
+                sx={{
+                  height: { xs: 26, md: 32 },
+                  width: 'auto',
+                  display: 'block',
+                }}
+              />
+            </Box>
 
             {/* Desktop Navigation */}
             <Box
@@ -149,7 +148,7 @@ export function SiteHeader() {
               sx={{
                 display: { xs: 'none', md: 'flex' },
                 alignItems: 'center',
-                gap: { md: 3, lg: 4 },
+                gap: { md: 3.5, lg: 4.5 },
                 flex: 1,
                 justifyContent: 'center',
               }}
@@ -160,19 +159,19 @@ export function SiteHeader() {
                   component="a"
                   href={item.href}
                   sx={{
-                    color: 'rgba(255, 255, 255, 0.8)',
-                    fontSize: '0.9rem',
+                    color: 'rgba(255, 255, 255, 0.85)',
+                    fontSize: '0.875rem',
                     fontWeight: 500,
                     textDecoration: 'none',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: 0.25,
-                    transition: 'color 0.15s ease',
+                    gap: 0.4,
                     letterSpacing: '-0.01em',
+                    transition: 'color 0.2s ease',
+                    position: 'relative',
                     '&:hover': {
                       color: '#ffffff',
                     },
-                    position: 'relative',
                     '&::after': {
                       content: '""',
                       position: 'absolute',
@@ -180,7 +179,7 @@ export function SiteHeader() {
                       left: 0,
                       right: 0,
                       height: '1.5px',
-                      backgroundColor: 'rgba(255,255,255,0.6)',
+                      backgroundColor: 'rgba(255,255,255,0.7)',
                       transform: 'scaleX(0)',
                       transformOrigin: 'center',
                       transition: 'transform 0.2s ease',
@@ -192,7 +191,7 @@ export function SiteHeader() {
                 >
                   <span>{item.label}</span>
                   {item.hasDropdown && (
-                    <KeyboardArrowDownIcon sx={{ fontSize: 14, opacity: 0.6 }} />
+                    <KeyboardArrowDownIcon sx={{ fontSize: 16, opacity: 0.7 }} />
                   )}
                 </Box>
               ))}
@@ -210,14 +209,15 @@ export function SiteHeader() {
               <Button
                 variant="text"
                 sx={{
-                  color: 'rgba(255, 255, 255, 0.8)',
+                  color: 'rgba(255, 255, 255, 0.85)',
                   fontWeight: 500,
                   fontSize: '0.875rem',
                   textTransform: 'none',
-                  px: 1.75,
+                  px: 2,
+                  borderRadius: 9999,
                   '&:hover': {
                     color: '#ffffff',
-                    backgroundColor: 'rgba(255,255,255,0.06)',
+                    backgroundColor: 'rgba(255,255,255,0.08)',
                   },
                 }}
               >
@@ -230,9 +230,12 @@ export function SiteHeader() {
                   color: '#111111',
                   fontWeight: 600,
                   fontSize: '0.875rem',
-                  px: 2.5,
+                  textTransform: 'none',
+                  px: 2.75,
                   py: 0.875,
                   borderRadius: 9999,
+                  boxShadow: 'none',
+                  transition: 'all 0.2s ease',
                   '&:hover': {
                     backgroundColor: 'rgba(255,255,255,0.92)',
                     transform: 'translateY(-1px)',
@@ -268,12 +271,13 @@ export function SiteHeader() {
           ModalProps={{ keepMounted: true }}
           PaperProps={{
             sx: {
-              top: 92,
-              backgroundColor: 'rgba(10, 10, 11, 0.96)',
-              backdropFilter: 'blur(20px)',
+              top: 88,
+              backgroundColor: 'rgba(10, 10, 11, 0.95)',
+              backdropFilter: 'blur(24px)',
+              WebkitBackdropFilter: 'blur(24px)',
               color: '#ffffff',
               borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-              px: 2,
+              px: 2.5,
               py: 3,
             },
           }}
@@ -291,7 +295,7 @@ export function SiteHeader() {
                   <ListItemText
                     primary={item.label}
                     primaryTypographyProps={{
-                      fontSize: '1.0625rem',
+                      fontSize: '1rem',
                       fontWeight: 500,
                       color: 'rgba(255,255,255,0.9)',
                     }}
@@ -308,6 +312,8 @@ export function SiteHeader() {
                   borderColor: 'rgba(255, 255, 255, 0.25)',
                   borderRadius: 9999,
                   py: 1.25,
+                  textTransform: 'none',
+                  fontWeight: 500,
                   '&:hover': { borderColor: 'rgba(255,255,255,0.5)' },
                 }}
                 onClick={() => setMobileOpen(false)}
@@ -323,6 +329,7 @@ export function SiteHeader() {
                   borderRadius: 9999,
                   py: 1.25,
                   fontWeight: 600,
+                  textTransform: 'none',
                 }}
                 onClick={() => setMobileOpen(false)}
               >
@@ -332,7 +339,7 @@ export function SiteHeader() {
           </List>
         </Drawer>
       </AppBar>
-    </>
+    </Box>
   );
 }
 

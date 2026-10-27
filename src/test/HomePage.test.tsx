@@ -49,7 +49,7 @@ describe('HomePage', () => {
     expect(
       screen.getByRole('heading', { name: /Answers to questions about/i })
     ).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Select FAQ topic/i })).toHaveTextContent('IKI');
+    expect(screen.getByRole('button', { name: /About IKI/i })).toBeInTheDocument();
     expect(screen.getByText(/What is IKI\?/i)).toBeInTheDocument();
     expect(screen.getByText(/How can I find a job on IKI\?/i)).toBeInTheDocument();
 

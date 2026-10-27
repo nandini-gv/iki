@@ -15,12 +15,16 @@ export function PageContainer({ children }: PageContainerProps) {
         display: 'flex',
         flexDirection: 'column',
         bgcolor: '#0A0A0B',
-        // The header is now sticky (position: sticky), so it does NOT
-        // overlay the hero. No extra padding-top is needed here.
       }}
     >
       <SiteHeader />
-      <Box component="main" sx={{ flexGrow: 1 }}>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          mt: { xs: '-60px', md: '-72px' },
+        }}
+      >
         {children}
       </Box>
       <SiteFooter />
